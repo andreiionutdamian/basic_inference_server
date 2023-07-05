@@ -1,5 +1,19 @@
+"""
+Copyright (C) 2017-2021 Andrei Damian, andrei.damian@me.com,  All rights reserved.
 
-from models.base import NeuralWordEmbeddingsEngine
+This software and its associated documentation are the exclusive property of the creator.
+Unauthorized use, copying, or distribution of this software, or any portion thereof,
+is strictly prohibited.
+
+Parts of this software are licensed and used in software developed by Neural Energy SRL.
+Any software proprietary to Neural Energy SRL is covered by Romanian and  Foreign Patents,
+patents in process, and are protected by trade secret or copyright law.
+
+Dissemination of this information or reproduction of this material is strictly forbidden unless prior
+written permission from the author.
+
+"""
+
 from libraries.model_server_v2 import FlaskWorker
 
 _CONFIG = {
@@ -36,10 +50,7 @@ class DummyModelAWorker(FlaskWorker):
   def _load_model(self):
     ### see docstring in parent
     ### abstract method implementation: no model to be loaded
-    if not self.cfg_placeholder_model:
-      self.nlp_model = NeuralWordEmbeddingsEngine(log=self.log)
-    else:
-      self.nlp_model = PlaceholderModel(log=self.log)
+    self.nlp_model = PlaceholderModel(log=self.log)
     return
 
   def _pre_process(self, inputs):
@@ -68,9 +79,18 @@ class DummyModelAWorker(FlaskWorker):
     else:
       word, lang = prep_inputs
       res = self.nlp_model.get_similar(word=word, lang=lang)
-    return res
+    return res, prep_inputs
 
   def _post_process(self, pred):
     ### see docstring in parent
     ### abstract method implementation: packs the endpoint answer that will be jsonified
-    return {'dummy_model_a_predict' : pred, 'worker_ver' : __WORKER_VER__}
+    pred, (inputs, lang) = pred
+    result = {
+      'dummy_model_a_predict' : pred, 
+      'inputs' : {
+        'INPUT_VALUE' : inputs, 
+        'LANGUAGE' : lang
+      }, 
+      'worker_ver' : __WORKER_VER__
+    }
+    return result
