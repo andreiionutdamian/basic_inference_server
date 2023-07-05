@@ -26,7 +26,7 @@
         },
 
         "dummy_model_b": {
-            "SERVER_CLASS"  : "adv_quiz_model",
+            "SERVER_CLASS"  : "dummy_model_b",
             "NR_WORKERS"    : 2,
             "HOST"          : "127.0.0.1",
             "DISABLED"      : true,
