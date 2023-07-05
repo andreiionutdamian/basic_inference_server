@@ -1,0 +1,13 @@
+
+.spyproject/
+
+libraries/__pycache__/
+
+*.pyc
+
+output/
+
+
+_local_cache/_logs/
+
+_local_cache/

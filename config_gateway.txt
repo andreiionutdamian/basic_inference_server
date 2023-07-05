@@ -1,0 +1,36 @@
+{
+    "DEFAULT_SERVER" : "dummy_model_a",
+    "NO_STARTUP_WAIT" : true,
+    
+    "CONFIG_ENDPOINTS": {                
+        "dummy_model_a": {
+            "NR_WORKERS"    : 2,
+            "HOST"          : "127.0.0.1",
+            "DESCRIPTION"   : "Test_01 server #1"
+        },
+
+        "dummy_model_a-bis": {
+            "SERVER_CLASS"  : "dummy_model_a",
+            "NR_WORKERS"    : 2,
+            "HOST"          : "127.0.0.1",
+            "DISABLED"      : true,
+            "DESCRIPTION"   : "dummy_model_a server #2. Redundancy server for dummy_model_a"
+        },
+        
+        
+        
+        "dummy_model_b": {
+            "NR_WORKERS"    : 2,
+            "HOST"          : "127.0.0.1",
+            "DESCRIPTION"   : "dummy_model_b server #1"
+        },
+
+        "dummy_model_b": {
+            "SERVER_CLASS"  : "adv_quiz_model",
+            "NR_WORKERS"    : 2,
+            "HOST"          : "127.0.0.1",
+            "DISABLED"      : true,
+            "DESCRIPTION"   : "dummy_model_b server #2. Redundancy server for dummy_model_b"
+        }
+    }
+}
