@@ -24,7 +24,7 @@ The `run.sh` contains the following script:
 #!/bin/bash
 
 while true; do
-  sudo docker run --pull=always -p 5002-5010:5002-5010 -v sw_vol:/safeweb_ai/output safeweb/ai
+  sudo docker run --pull=always -p 5002-5010:5002-5010 -v ai_vol:/aid_app/_cache <account>/<repo>
   sleep 5
 done
 ```
@@ -38,13 +38,13 @@ A simple Azure or AWS Ubuntu 18+ VM is recommanded. See below the installation i
 #### Docker build
 
 ```
-docker build -t org/repo .
+docker build -t <account>/<repo> .
 ```
 
 ...or a dev local build
 
 ```
-docker build -t localsw .
+docker build -t local_app .
 ```
 
 > **Note**
@@ -53,13 +53,13 @@ docker build -t localsw .
 #### Docker run
 
 ```
-docker run --pull=always -p 5002-5010:5002-5010 -v ai_vol:/aid_app/_cache org/repo
+docker run --pull=always -p 5002-5010:5002-5010 -v ai_vol:/aid_app/_cache <account>/<repo>
 ```
 
 or run locally
 
 ```
-docker run -p 5002-5010:5002-5010 localsw
+docker run -p 5002-5010:5002-5010 local_app
 ```
 
 > **Note**
@@ -101,27 +101,6 @@ Run a `POST` on `<address>:5002/run` with the following JSON:
 
 While `SIGNATURE` is mandatory for any microservice the other fields are dependent of the particular endpoint.
 
-In this case as well as in other quiz-like responses we will obtain something like:
-```
-{
-    "call_id": 1,
-    "quizzes" : [
-        {
-            "answer": "spațiul_încercărilor",
-            "max_given_time": 7,
-            "options": [
-                "spațiul_încercărilor",
-                "distribuție",
-                "variabilă"
-            ],
-            "question": "Mulțimea tuturor rezultatelor posibile într-un experiment de probabilitate se numește _______."
-        }
-    ],
-    "signature": "BasicQuizWorker:1",
-    "ver": "0.2.2",
-    "worker_ver": "1.0.8"
-}
-```
 
 For more information please see API section below.
 
@@ -172,7 +151,7 @@ sudo systemctl start docker
 9. Create inbound rule with `*` as source and `5002-5010` as destination
 
 
-## SafeWeb AI API information
+## AI API information
 
 In this section specific information about various microservices is provided.
 
