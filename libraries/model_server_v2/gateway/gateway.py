@@ -257,11 +257,14 @@ class FlaskGateway(LummetryObject):
     #endfor calc mem
     mem_used = round(mem_gateway + mem_servers, 2)
     mem_sys = round((mem_total - mem_avail) - mem_used,2)
+    server_name = self.config_data.get(MSCT.SERVER_NAME, 'base_ai_app')
+    self.P("Information for server '{}':".format(server_name))
     self.P("  Total server memory:    {:>5.1f} GB".format(mem_total), color='g')
     self.P("  Total server avail mem: {:>5.1f} GB".format(mem_avail), color='g')
     self.P("  Total allocated mem:    {:>5.1f} GB".format(mem_used), color='g')
     self.P("  System allocated mem:   {:>5.1f} GB".format(mem_sys), color='g')
     dct_stats = dict(
+      server_name=server_name,
       mem_total=mem_total,
       mem_avail=mem_avail,
       mem_gateway=mem_gateway,

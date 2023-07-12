@@ -1,6 +1,7 @@
 {
     "DEFAULT_SERVER" : "dummy_model_a",
     "NO_STARTUP_WAIT" : true,
+    "SERVER_NAME" : "base_server",
     
     "CONFIG_ENDPOINTS": {                
         "dummy_model_a": {
