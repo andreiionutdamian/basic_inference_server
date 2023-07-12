@@ -148,7 +148,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 ```
 
-9. Create inbound rule with `*` as source and `5002-5010` as destination
+9. Create inbound rule with `*` as source and `5002-5010` as destination then make sure you `sudo docker login` on the VM
 
 
 ## AI API information
