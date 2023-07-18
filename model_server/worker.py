@@ -19,9 +19,15 @@ import base64
 import json
 import traceback
 
-from libraries import Logger
-from libraries import BaseObject
-from libraries import _ConfigHandlerMixin
+try:
+  from basic_infer_svr.public_logger import Logger
+  from basic_infer_svr.generic_obj import BaseObject
+  from basic_infer_svr.config_handler_mixin import _ConfigHandlerMixin
+except:
+  from public_logger import Logger
+  from generic_obj import BaseObject
+  from config_handler_mixin import _ConfigHandlerMixin
+  
 
 class FlaskWorker(BaseObject, _ConfigHandlerMixin):
 

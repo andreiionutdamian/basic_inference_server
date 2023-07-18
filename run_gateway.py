@@ -22,8 +22,12 @@ import platform
 
 import argparse
 
-from libraries import Logger
-from libraries.model_server_v2.gateway import FlaskGateway, get_packages
+try:
+  from basic_infer_svr.public_logger import Logger
+  from basic_infer_svr.model_server.gateway import FlaskGateway, get_packages
+except:
+  from public_logger import Logger
+  from model_server.gateway import FlaskGateway, get_packages
 
 from time import sleep
 

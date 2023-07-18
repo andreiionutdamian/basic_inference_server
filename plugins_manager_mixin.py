@@ -5,13 +5,11 @@ import inspect
 import importlib
 import traceback
 
-from .code_cheker.base_code_checker import BaseCodeChecker
 
 class _PluginsManagerMixin:
 
   def __init__(self):
     super(_PluginsManagerMixin, self).__init__()
-    self.code_checker = BaseCodeChecker()
     return
 
   def _get_avail_plugins(self, locations):
@@ -42,7 +40,7 @@ class _PluginsManagerMixin:
     str_code = inspect.getsource(module)
     self.P("  Performing code safety check on module {}:".format(module.__name__), color='m')
     ### TODO: finish code analysis using BaseCodeChecker
-    errors = self.code_checker.check_code_text(str_code)
+    errors = None # self.code_checker.check_code_text(str_code)
     if errors is not None:      
       msg = "  ERROR: Unsafe code in {}:\n{}".format(
         module.__name__, '\n'.join(

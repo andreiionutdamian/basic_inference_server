@@ -7,8 +7,8 @@ sys.path.append(os.getcwd())
 import argparse
 import json
 
-from libraries import Logger
-from libraries.model_server_v2 import FlaskModelServer
+from basic_infer_svr import Logger
+from basic_infer_svr.model_server import FlaskModelServer
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()

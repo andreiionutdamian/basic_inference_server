@@ -1,6 +1,8 @@
 
-
-from libraries.model_server_v2 import FlaskWorker
+try:
+  from basic_infer_svr.model_server import FlaskWorker
+except:
+  from model_server import FlaskWorker
 
 _CONFIG = {
   'WEIGHT'    : 0,

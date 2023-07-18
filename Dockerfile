@@ -13,4 +13,4 @@ ENV AID_APP_ID BaseAidApp
 
 EXPOSE 5001-5015/tcp
 
-CMD ["python","run_gateway.py"]
+CMD ["python", "run_gateway.py"]

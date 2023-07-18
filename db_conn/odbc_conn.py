@@ -46,7 +46,7 @@ class ODBCConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-  from libraries import Logger
+  from ..public_logger import Logger
 
   log = Logger(
     lib_name='DB', base_folder='dropbox', app_folder='_lens_data/_product_dynamics',

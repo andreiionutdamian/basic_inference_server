@@ -22,12 +22,18 @@ from time import sleep
 
 from threading import Lock
 
-from libraries import Logger
-from libraries import BaseObject
-from libraries import _PluginsManagerMixin
-from libraries.logger_mixins.serialization_json_mixin import NPJson
-
-from libraries.model_server_v2.request_utils import get_api_request_body, MSCT
+try:
+  from basic_infer_svr.public_logger import Logger
+  from basic_infer_svr.generic_obj import BaseObject
+  from basic_infer_svr.plugins_manager_mixin import _PluginsManagerMixin
+  from basic_infer_svr.logger_mixins.serialization_json_mixin import NPJson
+  from basic_infer_svr.model_server.request_utils import get_api_request_body, MSCT
+except:
+  from public_logger import Logger
+  from generic_obj import BaseObject
+  from plugins_manager_mixin import _PluginsManagerMixin
+  from logger_mixins.serialization_json_mixin import NPJson
+  from model_server.request_utils import get_api_request_body, MSCT
 
 from ver import __VER__
 

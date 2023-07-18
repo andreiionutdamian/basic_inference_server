@@ -14,10 +14,15 @@ written permission from the author.
 
 """
 
-
-from libraries import Logger
 from collections import deque
 import traceback
+
+
+try:
+  from basic_infer_svr.public_logger import Logger
+except:
+  from public_logger import Logger
+  
 
 class BaseObject(object):
   """

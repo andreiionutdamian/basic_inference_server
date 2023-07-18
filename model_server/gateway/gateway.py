@@ -28,10 +28,10 @@ from functools import partial
 from time import sleep, time
 from datetime import timedelta
 
-from libraries import Logger
-from libraries import BaseObject
-from libraries.logger_mixins.serialization_json_mixin import NPJson
-from libraries.model_server_v2.request_utils import get_api_request_body, MSCT
+from ...public_logger import Logger
+from generic_obj import BaseObject
+from ...logger_mixins.serialization_json_mixin import NPJson
+from ..request_utils import get_api_request_body, MSCT
 
 from ver import __VER__
 

@@ -1,7 +1,7 @@
 
 
 
-from libraries import BaseObject
+from ..generic_obj import BaseObject
 import abc
 import time as tm
 import pandas as pd
