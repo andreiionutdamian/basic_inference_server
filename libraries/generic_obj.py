@@ -19,7 +19,7 @@ from libraries import Logger
 from collections import deque
 import traceback
 
-class LummetryObject(object):
+class BaseObject(object):
   """
   Generic class
   
@@ -43,7 +43,7 @@ class LummetryObject(object):
                log_at_startup=False,
                **kwargs):
 
-    super(LummetryObject, self).__init__()
+    super(BaseObject, self).__init__()
 
     if (log is None) or not hasattr(log, '_logger'):
       raise ValueError("Loggger object is invalid: {}".format(log))

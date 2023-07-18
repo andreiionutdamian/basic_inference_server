@@ -23,7 +23,7 @@ from time import sleep
 from threading import Lock
 
 from libraries import Logger
-from libraries import LummetryObject
+from libraries import BaseObject
 from libraries import _PluginsManagerMixin
 from libraries.logger_mixins.serialization_json_mixin import NPJson
 
@@ -31,7 +31,7 @@ from libraries.model_server_v2.request_utils import get_api_request_body, MSCT
 
 from ver import __VER__
 
-class FlaskModelServer(LummetryObject, _PluginsManagerMixin):
+class FlaskModelServer(BaseObject, _PluginsManagerMixin):
 
   app = None
 

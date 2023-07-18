@@ -1,14 +1,14 @@
 
 
 
-from libraries import LummetryObject
+from libraries import BaseObject
 import abc
 import time as tm
 import pandas as pd
 
 
 
-class BaseConnector(LummetryObject):
+class BaseConnector(BaseObject):
   def __init__(self, log, config, verbose=True, **kwargs):
     self.readers = {}
     self.config = config

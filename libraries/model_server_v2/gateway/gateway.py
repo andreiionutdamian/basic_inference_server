@@ -29,7 +29,7 @@ from time import sleep, time
 from datetime import timedelta
 
 from libraries import Logger
-from libraries import LummetryObject
+from libraries import BaseObject
 from libraries.logger_mixins.serialization_json_mixin import NPJson
 from libraries.model_server_v2.request_utils import get_api_request_body, MSCT
 
@@ -55,7 +55,7 @@ def get_packages():
   packs = sorted(packs)  
   return packs  
 
-class FlaskGateway(LummetryObject):
+class FlaskGateway(BaseObject):
 
   app = None
 
