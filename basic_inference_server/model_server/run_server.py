@@ -2,13 +2,15 @@
 
 import os
 import sys
-sys.path.append(os.getcwd())
+cwd = os.getcwd()
+print("run_server cwd: {}".format(cwd))
+sys.path.append(cwd)
 
 import argparse
 import json
 
-from basic_infer_svr import Logger
-from basic_infer_svr.model_server import FlaskModelServer
+from basic_inference_server import Logger
+from basic_inference_server import FlaskModelServer
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()

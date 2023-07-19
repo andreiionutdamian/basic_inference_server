@@ -14,7 +14,7 @@ written permission from the author.
 
 """
 
-from libraries.model_server_v2 import FlaskWorker
+from basic_inference_server import FlaskWorker
 
 _CONFIG = {
   'WEIGHT'     : 0,

@@ -15,7 +15,7 @@ written permission from the author.
 """
 
 import traceback
-from basic_infer_svr import Logger
+from ..public_logger import Logger
 import os
 
 class MSCT:

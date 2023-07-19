@@ -13,46 +13,25 @@ Dissemination of this information or reproduction of this material is strictly f
 written permission from the author.
 
 """
-try:
-  from basic_infer_svr.base_logger import BaseLogger
-  from basic_infer_svr.logger_mixins import (
-    _TimersMixin,
-    _MatplotlibMixin,
-    _HistogramMixin,
-    _DateTimeMixin,
-    _DataFrameMixin,
-    _GeneralSerializationMixin,
-    _JSONSerializationMixin,
-    _PickleSerializationMixin,
-    _DownloadMixin,
-    _UploadMixin,
-    _ProcessMixin,
-    _MachineMixin,
-    _GPUMixin,
-    _PackageLoaderMixin,
-    _PublicTFKerasMixin,
-    _UtilsMixin
-  )
-except:
-  from base_logger import BaseLogger
-  from logger_mixins import (
-    _TimersMixin,
-    _MatplotlibMixin,
-    _HistogramMixin,
-    _DateTimeMixin,
-    _DataFrameMixin,
-    _GeneralSerializationMixin,
-    _JSONSerializationMixin,
-    _PickleSerializationMixin,
-    _DownloadMixin,
-    _UploadMixin,
-    _ProcessMixin,
-    _MachineMixin,
-    _GPUMixin,
-    _PackageLoaderMixin,
-    _PublicTFKerasMixin,
-    _UtilsMixin
-  )
+from .base_logger import BaseLogger
+from .logger_mixins import (
+  _TimersMixin,
+  _MatplotlibMixin,
+  _HistogramMixin,
+  _DateTimeMixin,
+  _DataFrameMixin,
+  _GeneralSerializationMixin,
+  _JSONSerializationMixin,
+  _PickleSerializationMixin,
+  _DownloadMixin,
+  _UploadMixin,
+  _ProcessMixin,
+  _MachineMixin,
+  _GPUMixin,
+  _PackageLoaderMixin,
+  _PublicTFKerasMixin,
+  _UtilsMixin
+)
 
 class DotDict(dict):
   __getattr__ = dict.__getitem__

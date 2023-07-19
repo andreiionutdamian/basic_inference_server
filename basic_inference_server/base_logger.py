@@ -32,10 +32,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 from pathlib import Path
 
-try:
-  from basic_infer_svr.version import __VER__
-except:
-  from version import __VER__
+from  .version import __VER__
 
 _HTML_START = "<HEAD><meta http-equiv='refresh' content='5' ></HEAD><BODY><pre>"
 _HTML_END = "</pre></BODY>"

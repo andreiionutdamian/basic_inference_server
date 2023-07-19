@@ -29,9 +29,12 @@ from time import sleep, time
 from datetime import timedelta
 
 from ...public_logger import Logger
-from generic_obj import BaseObject
+from ...generic_obj import BaseObject
 from ...logger_mixins.serialization_json_mixin import NPJson
 from ..request_utils import get_api_request_body, MSCT
+
+
+from ...model_server import run_server_module
 
 from ver import __VER__
 
@@ -287,7 +290,11 @@ class FlaskGateway(BaseObject):
     self.P('  Description: "{}"'.format(desc))
     
     if config_endpoint.get(MSCT.DISABLED):
-      self.P("Skipping server '{}' due to its {} status: {}".format(server_name, MSCT.DISABLED, config_endpoint))
+      self.P("Skipping server '{}' due to its {} status:\n {}".format(
+        server_name, 
+        MSCT.DISABLED, 
+        json.dumps(config_endpoint, indent=4)), color='y'
+      )
       return False
     
     if MSCT.SERVER_CLASS in config_endpoint:
@@ -312,13 +319,15 @@ class FlaskGateway(BaseObject):
       self.P("WARNING: MSCT.NR_WORKERS not provided in endpoint configuration for {}.".format(server_name), color='r')
     #endif
 
+    
     msg = "Creating server `{} <{}>` at {}:{}{}".format(server_name, server_class, host, port, execution_path)
     self.P(msg, color='g')
     self._create_notification('log', msg)
-
+    str_cmd = os.path.relpath(run_server_module.__file__)
+    self.P("Running '{}'".format(str_cmd))
     popen_args = [
       'python',
-      'libraries/model_server_v2/run_server.py',
+      str_cmd,
       '--base_folder', self.log.root_folder,
       '--app_folder', self.log.app_folder,
       '--config_endpoint', json.dumps(config_endpoint),
@@ -332,8 +341,10 @@ class FlaskGateway(BaseObject):
       '--nr_workers', str(nr_workers),
       '--use_tf',
     ]
-
-    process = subprocess.Popen(popen_args)
+    
+    process = subprocess.Popen(
+      popen_args,
+    )
 
     self._servers[server_name] = {
       MSCT.PROCESS   : process,
@@ -342,14 +353,22 @@ class FlaskGateway(BaseObject):
       MSCT.START     : time(),
     }
 
-    sleep(1)
-
+    self.P(f"Waiting for process to {process.pid} warmup...")
+    sleep(3)
+    is_alive = process.poll() is not None
+    if not is_alive:
+      msg = "Process failed!"
+      self.P(msg, color='r')
+      self._create_notification(notif='log', msg=msg)
+      return False
+    #endif
+    
     msg = "Successfully created server '{}' with PID={}".format(server_name, process.pid)
     self.P(msg, color='g')
     self._create_notification('log', msg)
-    #endif
 
     return True
+  
   
   def _elapsed_to_str(self, t):
     return str(timedelta(seconds=int(t)))
