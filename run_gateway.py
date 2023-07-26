@@ -22,8 +22,7 @@ import platform
 
 import argparse
 
-from basic_inference_server import Logger
-from basic_inference_server import FlaskGateway, get_packages
+from basic_inference_server import Logger, FlaskGateway, get_packages
 
 from time import sleep
 
@@ -63,12 +62,18 @@ if __name__ == '__main__':
   parser.add_argument(
     '--port', type=int, default=5002
   )
+  
+  parser.add_argument(
+    '--default_python_path', type=str, default='.',
+    help="The path used as `PYTHONPATH` when calling `python run_server.py`"
+  )
 
   args = parser.parse_args()
   base_folder = args.base_folder
   app_folder = args.app_folder
   host = args.host
   port = args.port
+  default_python_path = args.default_python_path
 
   ### Attention! config_file should contain the configuration for each endpoint; 'NR_WORKERS' and upstream configuration
   log = Logger(
@@ -109,6 +114,7 @@ if __name__ == '__main__':
     workers_suffix='Worker',
     host=host,
     port=port,
+    default_python_path=default_python_path,
     #first_server_port=5020,
     server_execution_path='/run'
   )

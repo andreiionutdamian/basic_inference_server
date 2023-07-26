@@ -33,7 +33,7 @@ from ...generic_obj import BaseObject
 from ...logger_mixins.serialization_json_mixin import NPJson
 from ..request_utils import get_api_request_body, MSCT
 
-
+### WHAT IS THIS ?? ###
 from ...model_server import run_server_module
 
 from ver import __VER__
@@ -68,6 +68,7 @@ class FlaskGateway(BaseObject):
                workers_suffix=None,
                host=None,
                port=None,
+               default_python_path=None,
                first_server_port=None,
                server_execution_path=None,
                **kwargs
@@ -117,6 +118,7 @@ class FlaskGateway(BaseObject):
     self._server_execution_path = server_execution_path or MSCT.RULE_DEFAULT
     self._workers_location = workers_location
     self._workers_suffix = workers_suffix
+    self._default_python_path = default_python_path
 
     self._first_server_port = first_server_port or self._port + 1
     self._current_server_port = self._first_server_port
@@ -323,7 +325,7 @@ class FlaskGateway(BaseObject):
     msg = "Creating server `{} <{}>` at {}:{}{}".format(server_name, server_class, host, port, execution_path)
     self.P(msg, color='g')
     self._create_notification('log', msg)
-    str_cmd = os.path.relpath(run_server_module.__file__)
+    str_cmd = os.path.join(*os.path.relpath(run_server_module.__file__).split(os.sep)[-3:])
     self.P("Running '{}'".format(str_cmd))
     popen_args = [
       'python',
@@ -344,6 +346,7 @@ class FlaskGateway(BaseObject):
     
     process = subprocess.Popen(
       popen_args,
+      cwd=self._default_python_path,
     )
 
     self._servers[server_name] = {
