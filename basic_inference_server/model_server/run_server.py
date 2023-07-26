@@ -9,8 +9,14 @@ sys.path.append(cwd)
 import argparse
 import json
 
-from basic_inference_server import Logger
-from basic_inference_server.model_server import FlaskModelServer
+try:
+  from ..public_logger import Logger
+except ImportError:
+  from basic_inference_server.public_logger import Logger
+try:
+  from . import FlaskModelServer
+except ImportError:
+  from basic_inference_server.model_server import FlaskModelServer
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()

@@ -15,5 +15,4 @@ written permission from the author.
 
 """
 
-from .basic_inference_server import Logger
-from .basic_inference_server.model_server.gateway import FlaskGateway, get_packages
+from .basic_inference_server import Logger, FlaskGateway, get_packages
