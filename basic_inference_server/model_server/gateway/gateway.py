@@ -355,9 +355,9 @@ class FlaskGateway(BaseObject):
 
     self.P(f"Waiting for process to {process.pid} warmup...")
     sleep(3)
-    is_alive = process.poll() is not None
+    is_alive = process.poll() is None
     if not is_alive:
-      msg = "Process failed!"
+      msg = "Process failed for {}:{}".format(host, port)
       self.P(msg, color='r')
       self._create_notification(notif='log', msg=msg)
       return False
@@ -421,12 +421,13 @@ class FlaskGateway(BaseObject):
 
   def start_servers(self):
     for i,server_name in enumerate(self._start_server_names):
-      if self._start_server(
+      success = self._start_server(
         server_name=server_name,
         port=self._current_server_port,
         execution_path=self._server_execution_path,
         verbosity=1
-      ):
+      )
+      if success:
         self._current_server_port += 1
     #endfor
 

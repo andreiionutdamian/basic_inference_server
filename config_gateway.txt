@@ -1,17 +1,17 @@
 {
-    "DEFAULT_SERVER" : "dummy_model_a",
+    "DEFAULT_SERVER" : "dummy_model_demo1",
     "NO_STARTUP_WAIT" : true,
     "SERVER_NAME" : "base_server",
     
     "CONFIG_ENDPOINTS": {                
-        "dummy_model_a": {
+        "dummy_model_demo1": {
             "NR_WORKERS"    : 2,
             "HOST"          : "127.0.0.1",
             "DESCRIPTION"   : "Test_01 server #1"
         },
 
-        "dummy_model_a-bis": {
-            "SERVER_CLASS"  : "dummy_model_a",
+        "dummy_model_demo1-bis": {
+            "SERVER_CLASS"  : "dummy_model_demo1",
             "NR_WORKERS"    : 2,
             "HOST"          : "127.0.0.1",
             "DISABLED"      : true,
@@ -19,15 +19,14 @@
         },
         
         
-        
-        "dummy_model_b": {
+        "dummy_model_demo2": {
             "NR_WORKERS"    : 2,
             "HOST"          : "127.0.0.1",
-            "DESCRIPTION"   : "dummy_model_b server #1"
+            "DESCRIPTION"   : "dummy_model_demo2 server #1"
         },
 
-        "dummy_model_b": {
-            "SERVER_CLASS"  : "dummy_model_b",
+        "dummy_model_demo2-bis": {
+            "SERVER_CLASS"  : "dummy_model_demo2",
             "NR_WORKERS"    : 2,
             "HOST"          : "127.0.0.1",
             "DISABLED"      : true,

@@ -33,7 +33,7 @@ class PlaceholderModel():
   def get_similar(self, **kwargs):
     return "same-word-always"
 
-class DummyModelAWorker(FlaskWorker):
+class DummyModelDemo1Worker(FlaskWorker):
 
   """
   Example implementation of a worker
@@ -43,7 +43,7 @@ class DummyModelAWorker(FlaskWorker):
   """
 
   def __init__(self, **kwargs):
-    super(DummyModelAWorker, self).__init__(prefix_log='[DUMA]', **kwargs)
+    super(DummyModelDemo1Worker, self).__init__(prefix_log='[DUMA]', **kwargs)
     return
 
 

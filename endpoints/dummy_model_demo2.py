@@ -6,7 +6,7 @@ _CONFIG = {
   'BIAS'      : 0,
 }
 
-class DummyModelBWorker(FlaskWorker):
+class DummyModelDemo2Worker(FlaskWorker):
 
   """
   Example implementation of a worker
@@ -16,7 +16,7 @@ class DummyModelBWorker(FlaskWorker):
   """
 
   def __init__(self, **kwargs):
-    super(DummyModelBWorker, self).__init__(prefix_log='[DUMB]', **kwargs)
+    super(DummyModelDemo2Worker, self).__init__(prefix_log='[DUMB]', **kwargs)
     return
 
 

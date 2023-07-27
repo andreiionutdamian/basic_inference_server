@@ -3,16 +3,16 @@
 import os
 import sys
 cwd = os.getcwd()
-print("run_server cwd: {}".format(cwd))
 sys.path.append(cwd)
 
 import argparse
 import json
 
-from basic_inference_server import Logger
-from basic_inference_server.model_server import FlaskModelServer
+import basic_inference_server as BIS
 
 if __name__ == '__main__':
+  print("run_server cwd: {}".format(cwd))
+
   parser = argparse.ArgumentParser()
 
   parser.add_argument(
@@ -89,9 +89,9 @@ if __name__ == '__main__':
   use_tf = args.use_tf
   
   if microservice_code is None:
-    microservice_code = Logger.name_abbreviation(microservice_name)
+    microservice_code = BIS.Logger.name_abbreviation(microservice_name)
 
-  log = Logger(
+  log = BIS.Logger(
     lib_name=microservice_code,
     base_folder=base_folder,
     app_folder=app_folder,
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     max_lines=3000
   )
 
-  svr = FlaskModelServer(
+  svr = BIS.FlaskModelServer(
     log=log,
     workers_location=workers_location,
     worker_name=worker_name,
