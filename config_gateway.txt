@@ -31,6 +31,11 @@
             "HOST"          : "127.0.0.1",
             "DISABLED"      : true,
             "DESCRIPTION"   : "dummy_model_b server #2. Redundancy server for dummy_model_b"
+        },
+        
+        "support_process"  : {
+            "HOST"          : "NO_HOST",
+            "DESCRIPTION"   : "Dummy support process."
         }
     }
 }

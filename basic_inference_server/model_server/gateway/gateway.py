@@ -311,37 +311,55 @@ class FlaskGateway(BaseObject):
       host = host or DEFAULT_HOST
       self.P("WARNING: '{}' not provided in endpoint configuration for {}.".format(MSCT.HOST, server_name), color='r')
     #endif
-
-    if MSCT.NR_WORKERS in config_endpoint:
-      nr_workers = config_endpoint[MSCT.NR_WORKERS]
-    else:
-      nr_workers = nr_workers or DEFAULT_NR_WORKERS
-      self.P("WARNING: MSCT.NR_WORKERS not provided in endpoint configuration for {}.".format(server_name), color='r')
-    #endif
-
     
-    msg = "Creating server `{} <{}>` at {}:{}{}".format(server_name, server_class, host, port, execution_path)
-    self.P(msg, color='g')
-    self._create_notification('log', msg)
-    str_cmd = os.path.relpath(run_server_module.__file__)
-    self.P("Running '{}'".format(str_cmd))
-    popen_args = [
-      'python',
-      str_cmd,
-      '--base_folder', self.log.root_folder,
-      '--app_folder', self.log.app_folder,
-      '--config_endpoint', json.dumps(config_endpoint),
-      '--host', host,
-      '--port', str(port),
-      '--execution_path', execution_path,
-      '--workers_location', self._workers_location,
-      '--worker_name', server_class,
-      '--worker_suffix', self._workers_suffix,
-      '--microservice_name', server_name,
-      '--nr_workers', str(nr_workers),
-      '--use_tf',
-    ]
-    
+
+    if host == MSCT.SUPPORT_PROCESS_NO_HOST:
+      fn = os.path.join(self._workers_location, server_name + '.py')
+      if os.path.isfile(fn):
+        msg = "Creating support process {}".format(fn)
+        self.P(msg, color='g')
+        self._create_notification(notif='log', msg=msg)
+        popen_args = [
+          'python',
+          fn,
+        ]     
+        port = None
+      else:
+        msg = "Could not find support process {}".format(fn)
+        self.P(msg, color='r')
+        self._create_notification(notif='log', msg=msg)
+        return False
+    else:     
+      if MSCT.NR_WORKERS in config_endpoint:
+        nr_workers = config_endpoint[MSCT.NR_WORKERS]
+      else:
+        nr_workers = nr_workers or DEFAULT_NR_WORKERS
+        self.P("WARNING: MSCT.NR_WORKERS not provided in endpoint configuration for {}.".format(server_name), color='r')
+      #endif
+      
+      msg = "Creating server `{} <{}>` at {}:{}{}".format(server_name, server_class, host, port, execution_path)
+      self.P(msg, color='g')
+      self._create_notification('log', msg)
+      str_cmd = os.path.relpath(run_server_module.__file__)
+      self.P("Running '{}'".format(str_cmd))
+      popen_args = [
+        'python',
+        str_cmd,
+        '--base_folder', self.log.root_folder,
+        '--app_folder', self.log.app_folder,
+        '--config_endpoint', json.dumps(config_endpoint),
+        '--host', host,
+        '--port', str(port),
+        '--execution_path', execution_path,
+        '--workers_location', self._workers_location,
+        '--worker_name', server_class,
+        '--worker_suffix', self._workers_suffix,
+        '--microservice_name', server_name,
+        '--nr_workers', str(nr_workers),
+        '--use_tf',
+      ]
+    #endif suport process or normal server
+      
     process = subprocess.Popen(
       popen_args,
     )
@@ -354,7 +372,7 @@ class FlaskGateway(BaseObject):
     }
 
     self.P(f"Waiting for process to {process.pid} warmup...")
-    sleep(3)
+    sleep(2)
     is_alive = process.poll() is None
     if not is_alive:
       msg = "Process failed for {}:{}".format(host, port)
@@ -363,11 +381,16 @@ class FlaskGateway(BaseObject):
       return False
     #endif
     
-    msg = "Successfully created server '{}' with PID={}".format(server_name, process.pid)
+    result = None
+    if host == MSCT.SUPPORT_PROCESS_NO_HOST:
+      msg = "Successfully created SUPPORT process '{}' with PID={}".format(server_name, process.pid)
+      result = False # no need to increment port nr
+    else:
+      msg = "Successfully created server '{}' with PID={}".format(server_name, process.pid)
+      result = True
     self.P(msg, color='g')
     self._create_notification('log', msg)
-
-    return True
+    return result
   
   
   def _elapsed_to_str(self, t):
@@ -378,25 +401,33 @@ class FlaskGateway(BaseObject):
     urls = []
     _error = None
     paths = None
-    try:
-      url = 'http://{}:{}{}'.format(
-        self._servers[server_name][MSCT.HOST],
-        self._servers[server_name][MSCT.PORT],
-        MSCT.RULE_PATHS
-      )
-      response = requests.get(url=url)
-      paths = response.json()[MSCT.PATHS]
-      urls = [url]
-      for path in paths:
+    if self._servers[server_name][MSCT.HOST] == MSCT.SUPPORT_PROCESS_NO_HOST:
+      process = self._servers[server_name][MSCT.PROCESS]
+      is_alive = process.poll() is None
+      if is_alive:
+        online = True
+      paths = [process.args]
+    else:
+      try:
         url = 'http://{}:{}{}'.format(
           self._servers[server_name][MSCT.HOST],
           self._servers[server_name][MSCT.PORT],
-          path
+          MSCT.RULE_PATHS
         )
-        urls.append(url)
-      online = True
-    except Exception as exc:
-      _error = str(exc)
+        response = requests.get(url=url)
+        paths = response.json()[MSCT.PATHS]
+        urls = [url]
+        for path in paths:
+          url = 'http://{}:{}{}'.format(
+            self._servers[server_name][MSCT.HOST],
+            self._servers[server_name][MSCT.PORT],
+            path
+          )
+          urls.append(url)
+        online = True
+      except Exception as exc:
+        _error = str(exc)
+    #endif support or normal server
   
     result = {
       MSCT.ONLINE  : online,
@@ -564,7 +595,7 @@ class FlaskGateway(BaseObject):
     return self.get_response({
       MSCT.AVAIL_SERVERS : {
         svr_name : self._get_server_status(svr_name)
-        for svr_name in self._servers
+        for svr_name in self._servers 
       },
       MSCT.VER : __VER__,
     })

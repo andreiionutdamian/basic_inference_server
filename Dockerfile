@@ -1,5 +1,7 @@
 FROM aidamian/base_env:x64
 
+# pip install python-telegram-bot
+
 WORKDIR /aid_app
 
 COPY  . /aid_app
