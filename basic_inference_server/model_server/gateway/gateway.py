@@ -364,22 +364,22 @@ class FlaskGateway(BaseObject):
       popen_args,
     )
 
+    self.P(f"Waiting for process to {process.pid} warmup...")
+    sleep(2)
+    is_alive = process.poll() is None
+    if not is_alive:
+      msg = "**************** Process failed for {}:{}:{} *******************".format(process.args, host, port)
+      self.P(msg, color='r')
+      self._create_notification(notif='log', msg=msg)
+      return False
+    #endif
+    
     self._servers[server_name] = {
       MSCT.PROCESS   : process,
       MSCT.HOST      : host,
       MSCT.PORT      : port,
       MSCT.START     : time(),
-    }
-
-    self.P(f"Waiting for process to {process.pid} warmup...")
-    sleep(2)
-    is_alive = process.poll() is None
-    if not is_alive:
-      msg = "Process failed for {}:{}".format(host, port)
-      self.P(msg, color='r')
-      self._create_notification(notif='log', msg=msg)
-      return False
-    #endif
+    }    
     
     result = None
     if host == MSCT.SUPPORT_PROCESS_NO_HOST:
