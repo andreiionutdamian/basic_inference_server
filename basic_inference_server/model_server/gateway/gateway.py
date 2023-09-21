@@ -249,6 +249,9 @@ class FlaskGateway(BaseObject):
     mem_total = round(self.log.get_machine_memory(gb=True),2)
     mem_avail = round(self.log.get_avail_memory(gb=True),2)
     mem_gateway = round(self.log.get_current_process_memory(mb=False),2)
+    disk_total = round(self.log.get_total_disk(),2)
+    disk_avail = round(self.log.get_avail_disk(),2)
+    
     mem_servers = 0
     dct_servers = {
     }
@@ -266,6 +269,9 @@ class FlaskGateway(BaseObject):
     self.P("  Total server avail mem: {:>5.1f} GB".format(mem_avail), color='g')
     self.P("  Total allocated mem:    {:>5.1f} GB".format(mem_used), color='g')
     self.P("  System allocated mem:   {:>5.1f} GB".format(mem_sys), color='g')
+    self.P("  Disk free:   {:>5.1f} GB".format(disk_avail), color='g')
+    self.P("  Disk total:  {:>5.1f} GB".format(disk_total), color='g')
+    
     dct_stats = dict(
       server_name=server_name,
       mem_total=mem_total,
@@ -274,6 +280,8 @@ class FlaskGateway(BaseObject):
       mem_used=mem_used,
       mem_sys=mem_sys,
       mem_servers=dct_servers,
+      disk_avail=disk_avail,
+      disk_total=disk_total,      
       system=platform.platform(),
       py=sys.version,
       packs=get_packages(),
