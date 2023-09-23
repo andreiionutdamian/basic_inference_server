@@ -1,2 +1,2 @@
 docker build -t localsw .
-docker run -p 5002-5010:5002-5010 localsw
+docker run --rm --name basic_serving_debug -p 5002-5010:5002-5010 localsw

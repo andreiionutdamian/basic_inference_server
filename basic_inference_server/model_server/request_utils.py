@@ -44,7 +44,10 @@ class MSCT:
   URLS = 'URLS'
   UPTIME = 'UPTIME'
   START = 'START'
+  
   SYSTEM_STATUS = 'SYSTEM_STATUS'
+  SYSTEM_ALERTS = 'SYSTEM_ALERTS'
+  
   DEFAULT_SERVER = 'DEFAULT_SERVER'
   AVAIL_SERVERS = 'AVAIL_SERVERS'
   
@@ -68,6 +71,9 @@ class MSCT:
   RULE_PATHS = '/get_paths'
   
   KILL_CMD = 'SAFE_KILL_SERVER_CMD' 
+  
+  MEM_ALERT_THR = 0.15
+  DISK_ALERT_THR = 0.10
 
 def get_api_request_body(request, log : Logger, sender=None):
   try:
