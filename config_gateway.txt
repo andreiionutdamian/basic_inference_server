@@ -35,7 +35,8 @@
         
         "support_process"  : {
             "HOST"          : "NO_HOST",
-            "DESCRIPTION"   : "Dummy support process."
+            "PING_INTERVAL" : 10,
+            "DESCRIPTION"   : "Basic support process."
         }
     }
 }

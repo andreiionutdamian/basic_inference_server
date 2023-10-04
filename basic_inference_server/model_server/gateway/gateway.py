@@ -235,6 +235,14 @@ class FlaskGateway(BaseObject):
       view_func=self._view_system_status,
       methods=['GET', 'POST']
     )
+    
+    self.app.add_url_rule(
+      rule=MSCT.RULE_SUPPORT,
+      endpoint='SupportStatusEndpoint',
+      view_func=self._view_support_status,
+      methods=['GET', 'POST']
+    )
+    
 
     self.P("Starting gateway server after all endpoints have been defined...", color='g')
     self._get_system_status(display=True)
@@ -307,6 +315,8 @@ class FlaskGateway(BaseObject):
   def _start_server(self, server_name, port, execution_path, host=None, nr_workers=None, verbosity=1):
     config_endpoint = self._config_endpoints.get(server_name, {})
     
+    is_support_process = False
+    
     desc = config_endpoint.get(MSCT.DESCRIPTION)
     self.P('Attempting to start server with "SIGNATURE" : "{}"'.format(server_name))
     self.P('  Description: "{}"'.format(desc))
@@ -338,14 +348,27 @@ class FlaskGateway(BaseObject):
     if host == MSCT.SUPPORT_PROCESS_NO_HOST:
       fn = os.path.join(self._workers_location, server_name + '.py')
       if os.path.isfile(fn):
-        msg = "Creating support process {}".format(fn)
-        self.P(msg, color='g')
+        msg  = "Creating SUPPORT process {}".format(fn)
+        pad = 4
+        pad = int(pad / 2) * 2
+        self.P("*" * (len(msg) + pad), color='g')
+        self.P(" " * int(pad/2) + msg + " " * int(pad/2), color='g')
+        self.P("*" * (len(msg) + pad), color='g')
         self._create_notification(notif='log', msg=msg)
+        config_data = {
+          **config_endpoint,
+          "SERVER" : "127.0.0.1",
+          "SERVER_PORT" : self._port,
+          "SERVER_PATH" : MSCT.RULE_SUPPORT, 
+          "SUPPORT_NAME" : server_name,
+        }
         popen_args = [
           'python',
           fn,
+          '--config_endpoint', json.dumps(config_data),
         ]     
         port = None
+        is_support_process = True
       else:
         msg = "Could not find support process {}".format(fn)
         self.P(msg, color='r')
@@ -358,6 +381,7 @@ class FlaskGateway(BaseObject):
         nr_workers = nr_workers or DEFAULT_NR_WORKERS
         self.P("WARNING: MSCT.NR_WORKERS not provided in endpoint configuration for {}.".format(server_name), color='r')
       #endif
+      
       
       msg = "Creating server `{} <{}>` at {}:{}{}".format(server_name, server_class, host, port, execution_path)
       self.P(msg, color='g')
@@ -401,6 +425,7 @@ class FlaskGateway(BaseObject):
       MSCT.HOST      : host,
       MSCT.PORT      : port,
       MSCT.START     : time(),
+      MSCT.SUPPORT   : is_support_process, 
     }    
     
     result = None
@@ -654,3 +679,17 @@ class FlaskGateway(BaseObject):
     if not self._server_exists(signature):
       return self.get_response({MSCT.ERROR : "Bad signature {}. Available signatures: {}".format(signature, self.active_servers)})
 
+  def _view_support_status(self):
+    ok = True
+    request = flask.request
+    params = get_api_request_body(request, self.log)
+    signature = params.get(MSCT.SIGNATURE, None)
+
+    if signature is None:
+      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
+  
+    self.P("Support status update {}: {}".format(signature, params.get('msg')))
+    if ok:
+      return self.get_response({'MESSAGE': 'OK.'})
+    else:
+      return self.get_response({'MESSAGE': 'ERROR.'})

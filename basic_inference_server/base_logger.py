@@ -681,6 +681,14 @@ class BaseLogger(object):
         print("Creating folder [{}]".format(folder))
         os.makedirs(folder)
     return
+    
+  def update_config_data(self, dict_newdata):
+    assert isinstance(dict_newdata, dict)
+    self.config_data = {
+      **self.config_data,
+      **dict_newdata
+    }
+    return
 
   def update_config(self, dict_newdata=None):
     """

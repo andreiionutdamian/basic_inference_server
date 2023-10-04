@@ -44,6 +44,7 @@ class MSCT:
   URLS = 'URLS'
   UPTIME = 'UPTIME'
   START = 'START'
+  SUPPORT = 'SUPPORT'
   
   SYSTEM_STATUS = 'SYSTEM_STATUS'
   SYSTEM_ALERTS = 'SYSTEM_ALERTS'
@@ -64,6 +65,7 @@ class MSCT:
   RULE_START = '/start_server'
   RULE_KILL = '/kill_server'
   RULE_SYS = '/system_status'
+  RULE_SUPPORT = '/support_update_status'
   
   RULE_NOTIF = '/notifications'
   RULE_RUN = '/run'
