@@ -688,7 +688,7 @@ class FlaskGateway(BaseObject):
     if signature is None:
       return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
   
-    self.P("STATUS <{}>: {}".format(signature, params.get('msg')), color='m')
+    self.P("<STATUS {}>: {}".format(signature, params.get('msg')), color='m')
     if ok:
       return self.get_response({'MESSAGE': 'OK.'})
     else:
