@@ -322,7 +322,7 @@ class FlaskGateway(BaseObject):
     self.P('  Description: "{}"'.format(desc))
     
     if config_endpoint.get(MSCT.DISABLED):
-      self.P("Skipping server '{}' due to its {} status:\n {}".format(
+      self.P("WARNING: Skipping server '{}' due to its {} status:\n {}".format(
         server_name, 
         MSCT.DISABLED, 
         json.dumps(config_endpoint, indent=4)), color='y'
@@ -688,7 +688,7 @@ class FlaskGateway(BaseObject):
     if signature is None:
       return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
   
-    self.P("Support status update {}: {}".format(signature, params.get('msg')))
+    self.P("STATUS <{}>: {}".format(signature, params.get('msg')), color='m')
     if ok:
       return self.get_response({'MESSAGE': 'OK.'})
     else:
