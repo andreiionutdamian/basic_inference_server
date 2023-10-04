@@ -651,7 +651,7 @@ class FlaskGateway(BaseObject):
   def _view_system_status(self):
     status, alerts = self._get_system_status(display=True)
     return self.get_response({
-      MSCT.SYSTEM_ALERT : alerts,
+      MSCT.SYSTEM_ALERTS : alerts,
       MSCT.SYSTEM_STATUS : status,
     })
     
