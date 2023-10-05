@@ -180,13 +180,18 @@ class FlaskGateway(BaseObject):
     if not self._server_execution_path.startswith('/'):
       self._server_execution_path = '/' + self._server_execution_path
 
-    self.start_servers()
+    
 
     if self._paths is None:
       self.kill_servers()
       raise ValueError("Gateway cannot start because no paths were retrieved from endpoints.")
 
     self.app = flask.Flask('FlaskGateway')
+
+    self._start_basic_endpoints()
+
+    self.start_servers()
+
     self.app.json_encoder = NPJson
     for rule in self._paths:
       partial_view_func = partial(self._view_func_worker, rule)
@@ -198,50 +203,6 @@ class FlaskGateway(BaseObject):
         methods=['GET', 'POST', 'OPTIONS']
       )
     #endfor
-
-    self.app.add_url_rule(
-      rule=MSCT.RULE_START,
-      endpoint='StartServerEndpoint',
-      view_func=self._view_func_start_server,
-      methods=['GET', 'POST']
-    )
-
-    ### THIS SHOULD BE USED WITH CARE IN PROD
-    if True:
-      self.app.add_url_rule(
-        rule=MSCT.RULE_SHUTDOWN,
-        endpoint='ShutdownGateway',
-        view_func=self._view_shutdown,
-        methods=['GET', 'POST']
-      )
-
-    self.app.add_url_rule(
-      rule=MSCT.RULE_KILL,
-      endpoint='KillServerEndpoint',
-      view_func=self._view_func_kill_server,
-      methods=['GET', 'POST']
-    )
-    
-    self.app.add_url_rule(
-      rule=MSCT.RULE_LIST,
-      endpoint='ListServersEndpoint',
-      view_func=self._view_list_servers,
-      methods=['GET', 'POST']
-    )
-
-    self.app.add_url_rule(
-      rule=MSCT.RULE_SYS,
-      endpoint='SystemHealthStatus',
-      view_func=self._view_system_status,
-      methods=['GET', 'POST']
-    )
-    
-    self.app.add_url_rule(
-      rule=MSCT.RULE_SUPPORT,
-      endpoint='SupportStatusEndpoint',
-      view_func=self._view_support_status,
-      methods=['GET', 'POST']
-    )
     
 
     self.P("Starting gateway server after all endpoints have been defined...", color='g')
@@ -252,6 +213,67 @@ class FlaskGateway(BaseObject):
       threaded=True
     )
     return
+  
+  
+  def _start_basic_endpoints(self):
+    MANDATORY_RULES = [
+      dict(
+        rule=MSCT.RULE_START,
+        endpoint='StartServerEndpoint',
+        view_func=self._view_func_start_server,
+        methods=['GET', 'POST']        
+      ),
+      dict(
+        rule=MSCT.RULE_KILL,
+        endpoint='KillServerEndpoint',
+        view_func=self._view_func_kill_server,
+        methods=['GET', 'POST']        
+      ),
+      dict(
+        rule=MSCT.RULE_LIST,
+        endpoint='ListServersEndpoint',
+        view_func=self._view_list_servers,
+        methods=['GET', 'POST']        
+      ),
+      dict(
+        rule=MSCT.RULE_SYS,
+        endpoint='SystemHealthStatus',
+        view_func=self._view_system_status,
+        methods=['GET', 'POST']        
+      ),
+      dict(
+        rule=MSCT.RULE_SUPPORT,
+        endpoint='SupportStatusEndpoint',
+        view_func=self._view_support_status,
+        methods=['GET', 'POST']        
+      )
+    ]
+
+    ### THIS SHOULD BE USED WITH CARE IN PROD
+    if True:
+      MANDATORY_RULES.append(
+        dict(
+        rule=MSCT.RULE_SHUTDOWN,
+        endpoint='ShutdownGateway',
+        view_func=self._view_shutdown,
+        methods=['GET', 'POST']
+        )        
+      )
+
+    for dct_rule in MANDATORY_RULES:      
+      rule = dct_rule['rule']
+      partial_view_func = dct_rule['view_func']
+      methods = dct_rule['methods']
+      endpoint = dct_rule['endpoint']
+      self.P("Registering {} on `{}`".format(rule, partial_view_func.__name__), color='g')
+      self.app.add_url_rule(
+        rule=rule,
+        endpoint=endpoint,
+        view_func=partial_view_func,
+        methods=methods,
+      )    
+    return
+  
   
   def _get_system_status(self, display=True):
     mem_total = round(self.log.get_machine_memory(gb=True),2)

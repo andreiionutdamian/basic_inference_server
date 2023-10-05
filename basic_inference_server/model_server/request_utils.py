@@ -78,6 +78,7 @@ class MSCT:
   DISK_ALERT_THR = 0.10
 
 def get_api_request_body(request, log : Logger, sender=None):
+  params = {}
   try:
     method = request.method
     args_data = request.args
@@ -101,11 +102,8 @@ def get_api_request_body(request, log : Logger, sender=None):
       params = {}
     #endif
   except Exception as e:
-    s = 'sender={}\n\ntraceback={}\n\n\n\nrequest.data={}'.format(sender, traceback.format_exc(), str(request.data))
+    s = 'sender={}\n\ntraceback={}\n\nrequest.data={}'.format(sender, traceback.format_exc(), str(request.data))
     fn = 'error_{}'.format(log.now_str())
-    if sender is not None:
-      fn += '_{}'.format(sender)
-    with open(os.path.join(log.get_output_folder(), '{}.txt'.format(fn)), 'wt') as fh:
-      fh.write(s)
+    log.P("Error:\n{}".format(s), color='r')
 
   return params
