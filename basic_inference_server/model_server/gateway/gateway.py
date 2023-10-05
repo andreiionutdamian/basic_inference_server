@@ -180,17 +180,14 @@ class FlaskGateway(BaseObject):
     if not self._server_execution_path.startswith('/'):
       self._server_execution_path = '/' + self._server_execution_path
 
-    
-
-    if self._paths is None:
-      self.kill_servers()
-      raise ValueError("Gateway cannot start because no paths were retrieved from endpoints.")
-
     self.app = flask.Flask('FlaskGateway')
 
     self._start_basic_endpoints()
 
-    self.start_servers()
+    self.start_servers(start_support=False)
+    if self._paths is None:
+      self.kill_servers()
+      raise ValueError("Gateway cannot start because no paths were retrieved from endpoints.")
 
     self.app.json_encoder = NPJson
     for rule in self._paths:
@@ -207,14 +204,17 @@ class FlaskGateway(BaseObject):
 
     self.P("Starting gateway server after all endpoints have been defined...", color='g')
     self._get_system_status(display=True)
+    
+    self.P("Starting support processes...", color='g')
+    self.start_servers(start_support=True)    
+    
     self.app.run(
       host=self._host,
       port=self._port,
       threaded=True
-    )
+    )    
     return
-  
-  
+    
   def _start_basic_endpoints(self):
     MANDATORY_RULES = [
       dict(
@@ -519,8 +519,22 @@ class FlaskGateway(BaseObject):
       self.P("  Responded with paths={}".format(self._paths), color='g')
     return
 
-  def start_servers(self):
+
+  def start_servers(self, start_support=False):
     for i,server_name in enumerate(self._start_server_names):
+      config_endpoint = self._config_endpoints.get(server_name, {})
+      is_support = config_endpoint.get(MSCT.HOST, None) == MSCT.SUPPORT_PROCESS_NO_HOST
+      if is_support:
+        if not start_support:
+          continue
+        else:
+          self.P("  Starting support server '{}' ...".format(server_name), color='g')
+      else:
+        if start_support:
+          continue
+        else:
+          self.P("  Starting microservice server '{}' ...".format(server_name), color='g')
+      
       success = self._start_server(
         server_name=server_name,
         port=self._current_server_port,
