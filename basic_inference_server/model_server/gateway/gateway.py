@@ -36,7 +36,8 @@ from ..request_utils import get_api_request_body, MSCT
 
 from ...model_server import run_server_module
 
-from ver import __VER__
+from ...lib_ver import __VER__ as LIB_VER
+from app_ver import __VER__ as APP_VER
 
 DEFAULT_NR_WORKERS = 5
 DEFAULT_HOST = '127.0.0.1'
@@ -109,7 +110,7 @@ class FlaskGateway(BaseObject):
       The default is None (MSCT.RULE_DEFAULT)
     """
 
-    self.__version__ = __VER__
+    self.__version__ = LIB_VER
 
     self._start_server_names = server_names
     self._host = host or '127.0.0.1'
@@ -146,7 +147,8 @@ class FlaskGateway(BaseObject):
         dct_result = {
           MSCT.DATA : data,        
         }
-      dct_result[MSCT.VER] = __VER__
+      dct_result[MSCT.APP_VER] = APP_VER
+      dct_result[MSCT.FRM_VER] = LIB_VER
       dct_result[MSCT.TIME] = self.log.time_to_str()
       dct_result[MSCT.GW_UPTIME] = self._elapsed_to_str(time() - self._start_time)
       return flask.jsonify(dct_result)
@@ -610,25 +612,42 @@ class FlaskGateway(BaseObject):
     params = get_api_request_body(request, self.log)
     signature = params.pop(MSCT.SIGNATURE, None)
     if signature is None:
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : "Bad input. MSCT.SIGNATURE not found"})
+      return self.get_response({MSCT.ERROR : "Bad input. MSCT.SIGNATURE not found"})
 
     if signature not in self._servers:
       return self.get_response({
-        MSCT.VER : __VER__, 
         MSCT.ERROR : "Bad signature {}. Available signatures/servers: {}".format(
           signature, 
           self.active_servers
         )
       })
-
+    
     url = 'http://{}:{}{}'.format(
       self._servers[signature][MSCT.HOST],
       self._servers[signature][MSCT.PORT],
       path
     )
-
-    response = requests.post(url, json=params)
-    return self.get_response(response.json())
+    result = None
+    request_time_since_start = time() - self._servers[signature][MSCT.START]
+    try:      
+      response = requests.post(url, json=params)
+      result = self.get_response(response.json())
+    except Exception as exc:
+      if request_time_since_start < 70:
+        msg = "Server '{}' is not responding ({:.1f}s from start) - probably is still in INIT stage: {}".format(
+          url, request_time_since_start,
+          exc
+        )
+      else:
+        msg = "Server '{}' is not responding ({:.1f}s from start) - probably is DOWN: {}".format(
+          url, request_time_since_start,
+          exc
+        )
+      #endif too early or not
+      result = self.get_response({
+        MSCT.ERROR : msg,
+      })
+    return result
 
   def _view_func_start_server(self):
     request = flask.request
@@ -636,10 +655,10 @@ class FlaskGateway(BaseObject):
     signature = params.get(MSCT.SIGNATURE, None)
 
     if signature is None:
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
+      return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
 
     if self._server_exists(signature):
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : "Signature {} already started".format(signature)})
+      return self.get_response({MSCT.ERROR : "Signature {} already started".format(signature)})
 
     resp = self._start_server(
       server_name=signature,
@@ -659,12 +678,12 @@ class FlaskGateway(BaseObject):
     signature = params.get(MSCT.SIGNATURE, None)
 
     if signature is None:
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
+      return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
     
     if signature == '*':
       self.kill_servers()      
     elif not self._server_exists(signature):
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : "Bad signature {}. Available signatures: {}".format(signature, self.active_servers)})
+      return self.get_response({MSCT.ERROR : "Bad signature {}. Available signatures: {}".format(signature, self.active_servers)})
     else:
       process = self._get_server_process(signature)
       self._kill_server_by_name(signature)
@@ -680,7 +699,6 @@ class FlaskGateway(BaseObject):
         svr_name : self._get_server_status(svr_name)
         for svr_name in self._servers 
       },
-      MSCT.VER : __VER__,
     })
   
   
@@ -700,14 +718,15 @@ class FlaskGateway(BaseObject):
     signature = params.get(MSCT.SIGNATURE, None)
 
     if signature is None:
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
+      return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
     
     if signature.upper() == MSCT.KILL_CMD:
       self.P("Received shutdown command. Terminating all servers. Confirmation signature: {}".format(signature.upper()))
       self.kill_servers()
       _pid = os.getpid()
       _signal = signal.SIGKILL
-      self.P("Terminating gateway server v{} with pid {} with signal {}...".format(__VER__, _pid, _signal))
+      self.P("Terminating gateway server v{}/{} with pid {} with signal {}...".format(
+        APP_VER, LIB_VER, _pid, _signal))
       os.kill(_pid, _signal)
       self.P("Running _exit() ...")
       os._exit(1)
@@ -722,7 +741,7 @@ class FlaskGateway(BaseObject):
     signature = params.get(MSCT.SIGNATURE, None)
 
     if signature is None:
-      return self.get_response({MSCT.VER : __VER__, MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
+      return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
     message = params.get('msg')
     if message is not None:
       self.P("<STATUS {}>: {}".format(signature, message), color='m')

@@ -27,8 +27,7 @@ from ..generic_obj import BaseObject
 from ..plugins_manager_mixin import _PluginsManagerMixin
 from ..logger_mixins.serialization_json_mixin import NPJson
 from ..model_server.request_utils import get_api_request_body, MSCT
-
-from ver import __VER__
+from ..lib_ver import __VER__ as LIB_VER
 
 class FlaskModelServer(BaseObject, _PluginsManagerMixin):
 
@@ -90,7 +89,7 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin):
       The default is None (5)
     """
 
-    self.__version__ = __VER__
+    self.__version__ = LIB_VER
     self.__workers_location = workers_location
     self.__worker_name = worker_name
     self.__worker_suffix = worker_suffix
@@ -308,13 +307,13 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin):
         "client": client,
         "call_id": counter,
         "input": params,
-        'ver' : __VER__,
+        'framework_ver' : LIB_VER,
         'time' : self.log.time_to_str(),
       })
     else:
       if isinstance(answer, dict):
         answer['call_id'] = counter
-        answer['ver'] = __VER__
+        answer['framework_ver'] = LIB_VER
         answer['time'] = self.log.time_to_str()
         if worker is not None:
           answer['signature'] = '{}:{}'.format(worker.__class__.__name__, wid)
@@ -363,7 +362,7 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin):
     #endfor
 
     jresponse = flask.jsonify({
-      'ver' : __VER__, 
+      'framework_ver' : LIB_VER, 
       **{"GENERAL" : lst_general_notifs},
       **dct_notifs_per_call
     })
@@ -375,7 +374,7 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin):
 
     nr_workers = params.get(MSCT.NR_WORKERS, None)
     if nr_workers is None:
-      return flask.jsonify({'ver' : __VER__, 'ERROR' : "Bad input. 'NR_WORKERS' not found"})
+      return flask.jsonify({'framework_ver' : LIB_VER, 'ERROR' : "Bad input. 'NR_WORKERS' not found"})
 
     self._update_nr_workers(nr_workers)
     return flask.jsonify({'MESSAGE': 'OK'})

@@ -29,7 +29,8 @@ from time import sleep
 
 
 
-from ver import __VER__
+from app_ver import __VER__ as APP_VER
+from basic_inference_server import LIB_VER
 
 
 def runs_with_debugger():
@@ -88,7 +89,7 @@ if __name__ == '__main__':
   packs = get_packages()
   log.P("Running {} test v{} '{}', TZ: {}, py: {}, OS: {}, Docker: {}".format(
     ee_id,
-    __VER__,
+    APP_VER,
     path, 
     tz,
     sys.version.split(' ')[0], 

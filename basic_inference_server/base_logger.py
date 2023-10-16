@@ -32,7 +32,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 from pathlib import Path
 
-from  .version import __VER__
+from  .lib_ver import __VER__
 
 _HTML_START = "<HEAD><meta http-equiv='refresh' content='5' ></HEAD><BODY><pre>"
 _HTML_END = "</pre></BODY>"
