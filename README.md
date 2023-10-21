@@ -1,5 +1,9 @@
 # Basic Inference Server: Streamlined Model Deployment
 
+## Introduction
+
+### Intro TLDR
+The Basic Inference Server library encapsulates a streamlined approach towards deploying machine learning models efficiently. With the objective of modularity and ease of integration, this library is fabricated to operate both as a standalone Python package and as a submodule within broader systems. Its architecture is designed to meld seamlessly with contemporary CI/CD pipelines, thereby promoting a frictionless transition from model development to deployment.
 
 
 ## General information
@@ -366,6 +370,24 @@ if __name__ == '__main__':
   )
   
 ```
+
+## Extended info
+
+
+The library adopts a microservices-based architecture, orchestrated under a distributed gateway. This design paradigm not only facilitates multi-worker processing but also engenders a robust environment for hosting various microservices. Each microservice is distinctly identified by a property known as "SIGNATURE," which acts as a linchpin for routing requests to the respective service. The main repository is equipped with an autobuild mechanism triggered by a `push` operation, followed by a simple command to restart and update the Docker container on the server, thus ensuring that the latest version of the service is always deployed.
+
+The Basic Inference Server library eases the orchestration of docker containers through a simplistic script running on the server, which continuously ensures that the Docker container is up and running. Data persistence across sessions is assured through volume management, keeping the data intact and available across different sessions.
+
+Developers will find the provision for both local and remote docker build and run instructions advantageous, allowing for a flexible development and testing environment. The library is designed with a meticulous eye for detail; for instance, the environment preparation is articulated well to accommodate neural word embeddings within the environment layer.
+
+At its core, the engine operates as a microservice gateway, with each server running parallel workers to handle incoming requests. A unique feature is the ability to query the list of active servers, which provides a lens into the currently available microservices. Furthermore, the library provides a systematic approach to restart or update all servers within the automated container, thereby ensuring system robustness.
+
+The library's utility does not end with merely hosting the microservices; it extends to querying a microservice with a well-defined API. The API is designed meticulously to accommodate a variety of endpoints, each with a unique set of requirements. This is manifest in how the `SIGNATURE` field is used to identify the microservice, while other fields are tailored to the specific needs of the endpoint.
+
+Moreover, the library provides a detailed exposition on how to set up Docker on an Azure VM, thus broadening the horizon for deployment in cloud environments. This, coupled with the well-articulated API definitions for various utility features, like system health status, provides a comprehensive suite for managing and querying the deployed microservices.
+
+The library also shines in its provision for programmatic API information, demonstrating a clear path for setting up dummy servers and illustrating the configuration needed for setting up various endpoints. The code snippets provided elucidate the architecture of the workers, the models, and the endpoints, providing a clear roadmap for developers to integrate their models and deploy them.
+
 
 ## Author
 
