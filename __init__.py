@@ -15,6 +15,8 @@ written permission from the author.
 
 """
 from .basic_inference_server import Logger, LIB_VER
-from .basic_inference_server.model_server.gateway import FlaskGateway, get_packages
-from .basic_inference_server.model_server import FlaskModelServer, FlaskWorker
+from .basic_inference_server.model_server import (
+  FlaskModelServer, FlaskWorker,
+  FlaskGateway, get_packages
+)
 

@@ -1,5 +1,7 @@
 # Basic full inference server based on microservice-gateway architecture
 
+
+
 ## General information
 
 This section of documentation presents CI/CD aspects as well as basic API definitions. Extended API information can be found in below API section.
@@ -183,3 +185,22 @@ Getting system status requires a simple API call `POST <address>:5002/run`:
 }
 ```
 
+## Citation
+
+If you use this project in your research, please cite the following papers:
+
+```bibtex
+@article{ciobanu2021solis,
+  title={SOLIS--The MLOps journey from data acquisition to actionable insights},
+  author={Ciobanu, Razvan and Purdila, Alexandru and Piciu, Laurentiu and Damian, Andrei},
+  journal={arXiv preprint arXiv:2112.11925},
+  year={2021}
+}
+
+@article{milik2023aixpand,
+  title={AiXpand AI OS--Decentralized ubiquitous computing MLOps execution engine},
+  author={Milik, Beatrice and Saraev, Stefan and Bleotiu, Cristian and Lupaescu, Radu and Hobeanu, Bogdan and Damian, Andrei Ionut},
+  journal={arXiv preprint arXiv:2306.08708},
+  year={2023}
+}
+```
