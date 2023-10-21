@@ -588,43 +588,23 @@ if __name__ == '__main__':
     TF_KERAS=False
   )
 
-  running_in_docker = os.environ.get('AID_APP_DOCKER', False) == "Yes"
-  ee_id = os.environ.get('AID_APP_ID', 'aid_app_bare_metal')
-  show_packs = os.environ.get('SHOW_PACKS')
-  tz = os.environ.get('TZ', None)
-  path = os.getcwd()
-  log.P("Running in DEBUG mode" if in_debug else "Running in normal mode (NO debug enabled)")
-  packs = get_packages()
-  log.P("Running {} test v{} '{}', TZ: {}, py: {}, OS: {}, Docker: {}".format(
-    ee_id,
-    APP_VER,
-    path, 
-    tz,
-    sys.version.split(' ')[0], 
-    platform.platform(), 
-    running_in_docker
-    ), color='g'
-  )  
-  log.P("Show packages: {}".format(show_packs))
-  if show_packs in ['Yes', 'YES', 'yes']:
-    log.P("Packages: \n{}".format("\n".join(packs)))
-    
-  sleep(3)
 
   gtw = FlaskGateway(
     log=log,
-    # server_names=['get_tags', 'get_qa', 'get_sim', 'get_aprox', 'get_conf'],
     workers_location='endpoints',
     workers_suffix='Worker',
     host=host,
     port=port,
-    #first_server_port=5020,
     server_execution_path='/run'
   )
   
 ```
 
+## Author
 
+- Name: Andrei Ionut Damian
+- Email: andrei.damian@me.com
+- ORCID: [Andrei Ionut Damian](https://orcid.org/0000-0002-5294-6223)
 
 ## Citations
 
