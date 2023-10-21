@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2017-2021 Andrei Damian, andrei.damian@me.com,  All rights reserved.
-
-This software and its associated documentation are the exclusive property of the creator.
-Unauthorized use, copying, or distribution of this software, or any portion thereof,
-is strictly prohibited.
-
-
-Dissemination of this information or reproduction of this material is strictly forbidden unless prior
-written permission from the author
 
 Prezentare (RO): 
   - modul de analiza paralela a intregului ecosystem de servere
