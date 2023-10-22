@@ -1,8 +1,7 @@
 # Basic Inference Server: Streamlined Model Deployment
 
-## Introduction
+## Introduction (TL;DR)
 
-### Intro TLDR
 The Basic Inference Server library encapsulates a streamlined approach towards deploying machine learning models efficiently. With the objective of modularity and ease of integration, this library is fabricated to operate both as a standalone Python package and as a submodule within broader systems. Its architecture is designed to meld seamlessly with contemporary CI/CD pipelines, thereby promoting a frictionless transition from model development to deployment.
 
 

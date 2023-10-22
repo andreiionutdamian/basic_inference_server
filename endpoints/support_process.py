@@ -14,6 +14,7 @@ TODO:
   - receptionare de la ingress gateway a tuturor serverelor existente si a tuturor microserviciilor existente pentru a fi monitorizate
   - monitorizare individuala a fiecarui server si a fiecarui microserviciu (ping-uri periodice)
 
+
 """
 
 import json
@@ -25,7 +26,7 @@ from time import sleep, time
 
 import basic_inference_server as BIS
 
-__VERSION__ = '0.2.1'
+__VERSION__ = '0.0.1'
 
 class ServerMonitor:
   def __init__(self, name, log, interval=None, debug=False):
@@ -102,9 +103,10 @@ class ServerMonitor:
     self.__run_cnt += 1
     metrics = self._collect_system_metrics()
     msg = (
-      "Total Mem: {:.1f}GB, Avail Mem: {:.1f}GB, "
+      "{} v{} Total Mem: {:.1f}GB, Avail Mem: {:.1f}GB, "
       "Sys Used Mem: {:.1f}GB, App Used Mem: {:.1f}GB, Total Disk: {:.1f}GB, Avail Disk: {:.1f}GB"
     ).format(
+      self.__name, __VERSION__,
       metrics['total_memory'], metrics['available_memory'],
       metrics['system_used_memory'], metrics['app_used_memory'],
       metrics['total_disk'], metrics['available_disk']
