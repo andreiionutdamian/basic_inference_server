@@ -4,6 +4,7 @@
 
 The Basic Inference Server library encapsulates a streamlined approach towards deploying machine learning models efficiently. With the objective of modularity and ease of integration, this library is fabricated to operate both as a standalone Python package and as a submodule within broader systems. Its architecture is designed to meld seamlessly with contemporary CI/CD pipelines, thereby promoting a frictionless transition from model development to deployment.
 
+>Note: for a more detailed description of the library, please refer to the [extended info](#extended-info) section followed by the [author](#author) and [citations](#citations) sections.
 
 ## General information
 
@@ -231,7 +232,7 @@ Here is a quick start of the API. We assume we have a couple of dummy servers de
 
 The above configuration will result in the following servers: `dummy_model_demo1`, `dummy_model_demo2` and `support_process`. The `dummy_model_demo1-bis` is disabled and will not be started. The `support_process` is a special server that will be started automatically and will be used to monitor the other servers. 
 
-Furthermore lets define in the `endpoints` folder the following files:
+Furthermore lets define in the `endpoints` folder the following files. The base `FlaskWorker` can be found in the `basic_inference_server` package within the [model_server/worker.py](https://github.com/andreiionutdamian/basic_inference_server/blob/main/basic_inference_server/model_server/worker.py) module.
 
 ```python
 #file: endpoints/dummy_model_demo1.py
@@ -350,7 +351,7 @@ if __name__ == '__main__':
 
 ```
 
-Now lets put everything together in a `run_gateway.py` file:
+Now lets put everything together in a `run_gateway.py` file. A full example of this file can be found [here](https://github.com/andreiionutdamian/basic_inference_server/blob/main/run_gateway.py):
 
 ```python
 
@@ -369,6 +370,9 @@ if __name__ == '__main__':
   )
   
 ```
+
+The actual `FlaskGateway` microservice orchestrator can be found in [gateway.py](https://github.com/andreiionutdamian/basic_inference_server/blob/main/basic_inference_server/model_server/gateway.py). For each individualy defined "worker" endpoint the `FlaskGateway` will create a separate process that will simply run a `FlaskModelServer` instance - details regarding this module can be in the [server.py](https://github.com/andreiionutdamian/basic_inference_server/blob/main/basic_inference_server/model_server/server.py) file. The `FlaskModelServer` is that microservice that will responsible for running the parallel workers.
+
 
 ## Extended info
 
@@ -399,10 +403,19 @@ The library also shines in its provision for programmatic API information, demon
 If you use this project in your research, please cite the following papers:
 
 ```bibtex
-@article{aid2022basicinference,
-  title={Basic Inference Engine: Streamlined Model Deployment},
-  author={Damian, Andrei Ionut},
-  year={2022}
+@MISC{Damian2022-mk,
+  title        = "Basic Inference Engine: Streamlined Model Deployment",
+  author       = "Damian, Andrei Ionut",
+  abstract     = "The Basic Inference Server library encapsulates a streamlined
+                  approach towards deploying machine learning models
+                  efficiently. With the objective of modularity and ease of
+                  integration, this library is fabricated to operate both as a
+                  standalone Python package and as a submodule within broader
+                  systems. Its architecture is designed to meld seamlessly with
+                  contemporary CI/CD pipelines, thereby promoting a
+                  frictionless transition from model development to deployment.",
+  year         =  2022,
+  howpublished = "\url{https://github.com/andreiionutdamian/basic_inference_server}"
 }
 ```
 
