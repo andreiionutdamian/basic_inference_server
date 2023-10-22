@@ -399,6 +399,16 @@ The library also shines in its provision for programmatic API information, demon
 If you use this project in your research, please cite the following papers:
 
 ```bibtex
+@article{aid2022basicinference,
+  title={Basic Inference Engine: Streamlined Model Deployment},
+  author={Damian, Andrei Ionut},
+  year={2022}
+}
+```
+
+as well as the following papers:
+
+```bibtex
 @article{ciobanu2021solis,
   title={SOLIS--The MLOps journey from data acquisition to actionable insights},
   author={Ciobanu, Razvan and Purdila, Alexandru and Piciu, Laurentiu and Damian, Andrei},
