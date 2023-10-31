@@ -1,10 +1,11 @@
-@misc{aidamian2021bis,
-  author = {Damian, Andrei-Ionut},
-  title = {Basic Inference Server},
-  year = {2017-2022},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/andreiionutdamian/basic_inference_server}}
-}
-
-
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Damian"
+  given-names: "Andrei-Ionut"
+  orcid: "https://orcid.org/0000-0002-5294-6223"
+title: "Basic Inference Engine: Streamlined Model Deployment"
+version: 8.0.0
+doi: 10.48550/arXiv.2306.08708
+date-released: 2022-12-31
+url: "https://github.com/andreiionutdamian/basic_inference_server"
