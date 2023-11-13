@@ -1,3 +1,6 @@
+accelerate
+bitsandbytes
+tokenizers>=0.14.1
 # install peft - a pdf text extractor
 peft
 # install python-telegram-bot - a telegram bot api
