@@ -1,0 +1,29 @@
+# install peft - a pdf text extractor
+peft
+# install python-telegram-bot - a telegram bot api
+python-telegram-bot
+# base openai  lib
+openai
+# support for .env file with keys
+python-dotenv
+# langchain package
+langchain
+#pip install "langchain[docarray]"
+# pdf boilerplate
+pypdf
+# youtube downloader
+yt_dlp
+# audio processing
+pydub
+# token splitting
+tiktoken
+# text breakdown
+sentencepiece
+# lark is a parser
+lark
+# panel is built on top of bokeh
+# conda install panel
+# conda install -c conda-forge jupyter_bokeh
+# param is used for panel in order to create reactive objects https://github.com/holoviz/param/blob/main/doc/Promo.ipynb
+# param
+
