@@ -1,3 +1,5 @@
+# overwrite Werkzeug==2.2.2 
+Werkzeug==2.2.2 
 accelerate
 bitsandbytes
 tokenizers>=0.14.1
