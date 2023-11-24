@@ -320,7 +320,7 @@ class BaseLogger(object):
                     
 
 
-  def _logger(self, logstr, show=True, noprefix=False, show_time=False, color=None):
+  def _logger(self, logstr, show=True, noprefix=False, show_time=False, color=None, boxed=False):
     """
     log processing method
     """
@@ -337,7 +337,8 @@ class BaseLogger(object):
       logstr, show=show,
       noprefix=noprefix,
       show_time=show_time,
-      color=color
+      color=color,
+      boxed=boxed,
     )
     self.end_timer('_logger_add_log', section='LOGGER_internal')
 
@@ -400,7 +401,7 @@ class BaseLogger(object):
     # endfor
     return
 
-  def _add_log(self, logstr, show=True, noprefix=False, show_time=False, color=None):
+  def _add_log(self, logstr, show=True, noprefix=False, show_time=False, color=None, boxed=False):
     if type(logstr) != str:
       logstr = str(logstr)
     if logstr == "":
@@ -419,7 +420,16 @@ class BaseLogger(object):
       logstr = logstr[1:]
       prefix = "\n" + prefix
     res_log = logstr
-    logstr = prefix + logstr
+    if boxed:
+      str_box = prefix + '\n'
+      str_box += '=' * (len(logstr) + 6) + '\n'
+      str_box += '|  ' + ' ' * len(logstr) + '  |\n'
+      str_box += '|  ' + logstr + '  |\n'
+      str_box += '|  ' + ' ' * len(logstr) + '  |\n'
+      str_box += '=' * (len(logstr) + 6) + '\n'
+      logstr = str_box
+    else:
+      logstr = prefix + logstr
     if show_time:
       logstr += " [{:.2f}s]".format(elapsed)
     self.app_log.append(logstr)
@@ -493,8 +503,8 @@ class BaseLogger(object):
       noprefix=noprefix, color=color
     )
 
-  def P(self, str_msg, show_time=False, noprefix=False, color=None):
-    return self.p(str_msg, show_time=show_time, noprefix=noprefix, color=color)
+  def P(self, str_msg, show_time=False, noprefix=False, color=None, boxed=False):
+    return self.p(str_msg, show_time=show_time, noprefix=noprefix, color=color, boxed=boxed)
 
   @staticmethod
   def Pr(str_msg, show_time=False, noprefix=False):
@@ -502,12 +512,13 @@ class BaseLogger(object):
       str_msg = str(str_msg)
     print("\r" + str_msg, flush=True, end='')
 
-  def p(self, str_msg, show_time=False, noprefix=False, color=None):
+  def p(self, str_msg, show_time=False, noprefix=False, color=None, boxed=False):
     return self._logger(
       str_msg,
       show=True,
       show_time=show_time,
-      noprefix=noprefix, color=color
+      noprefix=noprefix, color=color,
+      boxed=boxed,
     )
 
   def Pmd(self, s=''):
