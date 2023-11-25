@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
   ### Attention! config_file should contain the configuration for each endpoint; 'NR_WORKERS' and upstream configuration
   log = Logger(
-    lib_name='APP-'+LIB_VER,
+    lib_name='APPv'+APP_VER,
     config_file='config_gateway.txt',
     base_folder=base_folder, app_folder=app_folder,
     TF_KERAS=False
