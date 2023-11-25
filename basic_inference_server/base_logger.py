@@ -421,12 +421,13 @@ class BaseLogger(object):
       prefix = "\n" + prefix
     res_log = logstr
     if boxed:
+      indent = (len(prefix) + 2) * ' '
       str_box = prefix + '\n'
-      str_box += '=' * (len(logstr) + 6) + '\n'
-      str_box += '|  ' + ' ' * len(logstr) + '  |\n'
-      str_box += '|  ' + logstr + '  |\n'
-      str_box += '|  ' + ' ' * len(logstr) + '  |\n'
-      str_box += '=' * (len(logstr) + 6) + '\n'
+      str_box += indent + '=' * (len(logstr) + 6) + '\n'
+      str_box += indent + '|  ' + ' ' * len(logstr) + '  |\n'
+      str_box += indent + '|  ' + logstr + '  |\n'
+      str_box += indent + '|  ' + ' ' * len(logstr) + '  |\n'
+      str_box += indent + '=' * (len(logstr) + 6) + '\n'
       logstr = str_box
     else:
       logstr = prefix + logstr
