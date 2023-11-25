@@ -632,15 +632,14 @@ class FlaskGateway(
     sig (int): The signal number.
     frame (frame): The current stack frame.
     """
-    self.P('Signal received: {}'.format(sig), color='r')
-    self.P('Performing safe shutdown...')
+    self.P('Signal received: {}. Performing safe shutdown...'.format(sig), color='r')
     # Perform your cleanup here
     # For example, close database connections, save necessary data, etc.
     self.gw_shutdown()
     
     
   def gw_shutdown(self):
-    self.P("Running gateway shutdown...", color='r')
+    self.P("Running gateway v{}/{} shutdown...".format(APP_VER, LIB_VER), color='r')
     self.kill_servers()
     _pid = os.getpid()
     _signal = signal.SIGKILL
