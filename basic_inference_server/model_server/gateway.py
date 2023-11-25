@@ -16,6 +16,7 @@ written permission from the author.
 import sys
 import platform
 import os
+import signal
 import subprocess
 import json
 import requests
@@ -25,7 +26,7 @@ import flask
 
 from functools import partial
 from time import sleep, time
-from datetime import timedelta
+
 
 from ..public_logger import Logger
 from ..generic_obj import BaseObject
@@ -39,6 +40,7 @@ from ..lib_ver import __VER__ as LIB_VER
 from app_ver import __VER__ as APP_VER
 
 from .gateway_functions import _GatewayFunctionMixin
+from .gateway_utils_mixin import _GatewayUtilsMixin, StateCT
 
 DEFAULT_NR_WORKERS = 5
 DEFAULT_HOST = '127.0.0.1'
@@ -63,6 +65,7 @@ def get_packages():
 class FlaskGateway(
   BaseObject,
   _GatewayFunctionMixin,
+  _GatewayUtilsMixin,
   ):
 
   app = None
@@ -129,12 +132,12 @@ class FlaskGateway(
     self._config_endpoints = None
     
     self._start_time = time()
-
+    
     self._servers = {}
     self._paths = None
     super(FlaskGateway, self).__init__(log=log, prefix_log='[FSKGW]', **kwargs)
     return
-  
+    
   
   def get_response(self, data):
     if MSCT.DOWNLOAD_FILE_COMMAND in data:
@@ -175,7 +178,8 @@ class FlaskGateway(
     return
 
   def startup(self):
-    super().startup()
+    super().startup()   
+    self.load_gw_state_history() 
     self._log_banner()
     self._no_startup_wait = self.config_data.get(MSCT.NO_STARTUP_WAIT, False)
     self._config_endpoints = self.config_data.get(MSCT.CONFIG_ENDPOINTS, {})
@@ -213,6 +217,9 @@ class FlaskGateway(
     
     self.P("Starting support processes...", color='g')
     self.start_servers(start_support=True)    
+    
+    self.update_gw_state_history(state=StateCT.STARTUP)
+    self.register_handlers()
     
     self.app.run(
       host=self._host,
@@ -468,9 +475,6 @@ class FlaskGateway(
     return result
   
   
-  def _elapsed_to_str(self, t):
-    return str(timedelta(seconds=int(t)))
-  
   def _get_server_status(self, server_name):
     online = False
     urls = []
@@ -609,4 +613,41 @@ class FlaskGateway(
       sleep(2)
       self.P("  Server '{}' deallocated.".format(server_name))
     return
+
+  def register_handlers(self):
+    # Register signal handlers
+    self.P("Registering signal handlers...")
+    signal.signal(signal.SIGINT, self.__signal_handler)  # Intercept CTRL-C
+    signal.signal(signal.SIGTERM, self.__signal_handler) # Intercept SIGTERM    
+    self.P("Done registering signal handlers.", color='g')
+    return
+    
   
+  def __signal_handler(self, sig, frame):
+    """
+    Handle the incoming signal and perform cleanup.
+
+    Parameters:
+    sig (int): The signal number.
+    frame (frame): The current stack frame.
+    """
+    self.P('Signal received: {}'.format(sig), color='r')
+    self.P('Performing safe shutdown...')
+    # Perform your cleanup here
+    # For example, close database connections, save necessary data, etc.
+    self.gw_shutdown()
+    
+    
+  def gw_shutdown(self):
+    self.P("Running gateway shutdown...", color='r')
+    self.kill_servers()
+    _pid = os.getpid()
+    _signal = signal.SIGKILL
+    
+    self.update_gw_state_history(state=StateCT.SHUTDOWN)
+    
+    self.P("Terminating gateway server v{}/{} with pid {} with signal {}...".format(
+      APP_VER, LIB_VER, _pid, _signal))
+    os.kill(_pid, _signal)
+    self.P("Running _exit() ...")
+    os._exit(1)    

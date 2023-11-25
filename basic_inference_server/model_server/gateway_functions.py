@@ -1,13 +1,13 @@
 import flask
 import requests
-import os
-import signal
+
 
 from time import sleep, time
 from datetime import timedelta
 
 
 from .request_utils import get_api_request_body, MSCT
+from .gateway_utils_mixin import StateCT
 
 from ..lib_ver import __VER__ as LIB_VER
 from app_ver import __VER__ as APP_VER
@@ -115,8 +115,10 @@ class _GatewayFunctionMixin(object):
   
   def _view_system_status(self):
     status, alerts = self._get_system_status(display=True)
+    dct_history = self.get_gw_state_history()
     return self.get_response({
       MSCT.SYSTEM_ALERTS : alerts,
+      MSCT.SYSTEM_HISTORY : dct_history,
       MSCT.SYSTEM_STATUS : status,
     })
     
@@ -130,18 +132,14 @@ class _GatewayFunctionMixin(object):
       return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
     
     if signature.upper() == MSCT.KILL_CMD:
-      self.P("Received shutdown command. Terminating all servers. Confirmation signature: {}".format(signature.upper()))
-      self.kill_servers()
-      _pid = os.getpid()
-      _signal = signal.SIGKILL
-      self.P("Terminating gateway server v{}/{} with pid {} with signal {}...".format(
-        APP_VER, LIB_VER, _pid, _signal))
-      os.kill(_pid, _signal)
-      self.P("Running _exit() ...")
-      os._exit(1)
+      self.P("Received shutdown command.Confirmation signature: {}".format(signature.upper()))
+      self.gw_shutdown()
+    #endif done kill 
 
     if not self._server_exists(signature):
       return self.get_response({MSCT.ERROR : "Bad signature {}. Available signatures: {}".format(signature, self.active_servers)})
+    return
+  
 
   def _view_support_status(self):
     ok = True
