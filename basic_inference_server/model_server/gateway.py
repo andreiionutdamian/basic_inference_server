@@ -135,7 +135,7 @@ class FlaskGateway(
     
     self._servers = {}
     self._paths = None
-    super(FlaskGateway, self).__init__(log=log, prefix_log='[FSKGW]', **kwargs)
+    super(FlaskGateway, self).__init__(log=log, prefix_log='[GW]', **kwargs)
     return
     
   
