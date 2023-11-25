@@ -82,7 +82,7 @@ if __name__ == '__main__':
   in_debug = runs_with_debugger()
   running_in_docker = os.environ.get('AID_APP_DOCKER', False) == "Yes"
   ee_id = os.environ.get('AID_APP_ID', 'aid_app_bare_metal')
-  show_packs = os.environ.get('SHOW_PACKS')
+  show_packs = os.environ.get('AID_APP_SHOW_PACKS')
   tz = os.environ.get('TZ', None)
   path = os.getcwd()
   log.P("Running in DEBUG mode" if in_debug else "Running in normal mode (NO debug enabled)")

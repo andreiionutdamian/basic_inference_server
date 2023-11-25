@@ -179,6 +179,7 @@ class FlaskGateway(
 
   def startup(self):
     super().startup()   
+    self.show_env()
     self.load_gw_state_history() 
     self._log_banner()
     self._no_startup_wait = self.config_data.get(MSCT.NO_STARTUP_WAIT, False)

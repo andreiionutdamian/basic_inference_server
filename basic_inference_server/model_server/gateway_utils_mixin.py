@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime, timedelta
 
@@ -14,6 +15,12 @@ class _GatewayUtilsMixin(object):
     super(_GatewayUtilsMixin, self).__init__()
     
     self.__gw_state_history = {}
+    return
+  
+  def show_env(self):
+    for k,v in os.environ.items():
+      if k.startswith('AID_') or k.startswith('NEAIL_'):
+        self.P("{}: {}".format(k,v))
     return
   
   def _elapsed_to_str(self, t):

@@ -2,3 +2,4 @@ output
 _local_cache
 .git
 .spyproject
+.env
