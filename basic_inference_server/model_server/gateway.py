@@ -630,8 +630,10 @@ class FlaskGateway(
     Handle the incoming signal and perform cleanup.
 
     Parameters:
-    sig (int): The signal number.
-    frame (frame): The current stack frame.
+    
+      sig (int): The signal number.
+      
+      frame (frame): The current stack frame.
     """
     self.P('Signal received: {}. Performing safe shutdown...'.format(sig), color='r')
     # Perform your cleanup here
