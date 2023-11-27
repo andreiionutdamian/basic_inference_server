@@ -617,8 +617,9 @@ class FlaskGateway(
 
   def register_handlers(self):
     # Register signal handlers
-    self.P("Registering signal handlers...")
+    self.P("Registering signal handler {} ...".format(signal.SIGINT))
     signal.signal(signal.SIGINT, self.__signal_handler)  # Intercept CTRL-C
+    self.P("Registering signal handler {} ...".format(signal.SIGTERM))
     signal.signal(signal.SIGTERM, self.__signal_handler) # Intercept SIGTERM    
     self.P("Done registering signal handlers.", color='g')
     return
