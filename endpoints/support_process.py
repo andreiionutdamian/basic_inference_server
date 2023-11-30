@@ -1,20 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
-Prezentare (RO): 
-  - modul de analiza paralela a intregului ecosystem de servere
-  - ecosystemul de servere este compus dintr-un server the tip "ingress gateway" care va ridica servere individuale pentru fiecare microserviciu in acelasi container
-  - fiecare microserviciu este un server de tip "model server" care va rula un model de invatare automata (profunda sau superficiala) cu logica si euristici 
-  - modulele de tp "support" sunt module care nu au un server dedicat, dar care pot fi folosite pentru a monitoriza starea serverelor si a microserviciilor
-  - fiecare modul de tip "support" va accesa un endpoint dedicat `/support_update_status` de tip "support" care este disponibil pe serverul de tip gateway
-  
-TODO:
-  - revizuire si testarea endpoint /support_update_status pentru a asigura ca este disponibil si functioneaza corect
-  - adaugare analiza pe serie de timp a starii parametrilor de sistem
-  - receptionare de la ingress gateway a tuturor serverelor existente si a tuturor microserviciilor existente pentru a fi monitorizate
-  - monitorizare individuala a fiecarui server si a fiecarui microserviciu (ping-uri periodice)
-
-
+Template for a support process that can be used to monitor the server.
 """
 
 import json
@@ -138,14 +124,22 @@ if __name__ == '__main__':
     help='JSON configuration of the endpoint'
   )
   
+  parser.add_argument(
+    '--host_id', type=str,
+    help='The host id'
+  )
+  
   args = parser.parse_args()
+  host_id = args.host_id
   str_config_data = args.config_endpoint
+
   print("Using --config_endpoint: {}".format(str_config_data))
   config_data = json.loads(str_config_data)
   name = config_data.get("SUPPORT_NAME", "SUPPORT")
   
   log = BIS.Logger(
-    lib_name="SPRC",
+    lib_name="TSPRC",
+    host_id=host_id,
     base_folder=".",
     app_folder="_cache",
     TF_KERAS=False, # use_tf

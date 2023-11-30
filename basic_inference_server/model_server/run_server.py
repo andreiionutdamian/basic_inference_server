@@ -70,6 +70,10 @@ if __name__ == '__main__':
   )
 
   parser.add_argument(
+    '--host_id', type=str
+  )
+
+  parser.add_argument(
     '--use_tf', action='store_true'
   )
 
@@ -85,6 +89,7 @@ if __name__ == '__main__':
   worker_suffix = args.worker_suffix
   microservice_name = args.microservice_name
   microservice_code = args.microservice_code
+  host_id = args.host_id
   nr_workers = args.nr_workers
   use_tf = args.use_tf
   
@@ -93,6 +98,7 @@ if __name__ == '__main__':
 
   log = BIS.Logger(
     lib_name=microservice_code,
+    host_id=host_id,
     base_folder=base_folder,
     app_folder=app_folder,
     TF_KERAS=False, # use_tf
@@ -101,6 +107,7 @@ if __name__ == '__main__':
 
   svr = BIS.FlaskModelServer(
     log=log,
+    host_id=host_id,
     workers_location=workers_location,
     worker_name=worker_name,
     microservice_name=microservice_name,

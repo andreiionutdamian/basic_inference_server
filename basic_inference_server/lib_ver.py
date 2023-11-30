@@ -1,1 +1,1 @@
-__VER__ = '8.7.0' # framework version
+__VER__ = '8.8.2' # framework version

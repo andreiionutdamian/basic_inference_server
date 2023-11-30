@@ -39,8 +39,9 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin, _ServerFunctionsMixin):
   app = None
 
   def __init__(self, log : Logger,
-               workers_location,
-               worker_name,
+               workers_location : str,
+               worker_name : str,
+               host_id : str,
                worker_suffix=None,
                microservice_name=None,
                host=None,
@@ -95,6 +96,7 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin, _ServerFunctionsMixin):
     """
 
     self.__version__ = LIB_VER
+    self.__host_id = host_id
     self.__workers_location = workers_location
     self.__worker_name = worker_name
     self.__worker_suffix = worker_suffix
@@ -172,16 +174,7 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin, _ServerFunctionsMixin):
       self.__version__, self.__microservice_name, self.__worker_name, self.__worker_class_name,  self._host, self._port
     )
 
-    lead = 5
-    _logo = " " * lead + _logo
-    s2 = (len(_logo) + lead) * "*"
-    self.log.P("")
-    self.log.P(s2)
-    self.log.P("")
-    self.log.P(_logo)
-    self.log.P("")
-    self.log.P(s2)
-    self.log.P("")
+    self.log.P(_logo, color='g', boxed=True)
     self.log.P("Given full config:\n{}".format(json.dumps(self._config_endpoint, indent=4)))
     return
 

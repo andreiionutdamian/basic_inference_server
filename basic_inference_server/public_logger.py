@@ -61,6 +61,7 @@ class Logger(
   def __init__(self, lib_name="",
                lib_ver="",
                config_file="",
+               host_id="",
                base_folder=None,
                app_folder=None,
                show_time=True,
@@ -73,7 +74,7 @@ class Logger(
                TF_KERAS=False):
 
     super(Logger, self).__init__(
-      lib_name=lib_name, lib_ver=lib_ver,
+      lib_name=lib_name, lib_ver=lib_ver, host_id=host_id,
       config_file=config_file,
       base_folder=base_folder,
       app_folder=app_folder,

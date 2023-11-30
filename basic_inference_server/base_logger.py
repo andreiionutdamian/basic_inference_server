@@ -59,6 +59,7 @@ class BaseLogger(object):
   def __init__(self, lib_name="",
                lib_ver="",
                config_file="",
+               host_id="",
                base_folder=None,
                app_folder=None,
                show_time=True,
@@ -73,10 +74,14 @@ class BaseLogger(object):
     super(BaseLogger, self).__init__()
     if os.name == 'nt':
       os.system('color')
-    self.__lib__ = lib_name
+    if host_id not in ["", None]:
+      self.__lib__ = "{}: {}".format(host_id, lib_name)
+    else:
+      self.__lib__ = lib_name
     self.show_time = show_time
     self.no_folders_no_save = no_folders_no_save
     self.max_lines = max_lines
+    self.host_id = host_id
     self.HTML = HTML
     self.DEBUG = DEBUG
     self.log_suffix = lib_name
@@ -422,6 +427,8 @@ class BaseLogger(object):
     res_log = logstr
     if boxed:
       indent = (len(prefix) + 2) * ' '
+      if len(logstr) > 50:
+        indent = 8 * ' '
       str_box = prefix + '\n'
       str_box += indent + '=' * (len(logstr) + 6) + '\n'
       str_box += indent + '|  ' + ' ' * len(logstr) + '  |\n'

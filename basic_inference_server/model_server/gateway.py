@@ -71,7 +71,8 @@ class FlaskGateway(
   app = None
 
   def __init__(self, log : Logger,
-               workers_location,
+               workers_location : str,
+               host_id : str,
                server_names=None,
                workers_suffix=None,
                host=None,
@@ -122,6 +123,7 @@ class FlaskGateway(
     self._start_server_names = server_names
     self._host = host or '127.0.0.1'
     self._port = port or 5000
+    self.__host_id = host_id
     self._server_execution_path = server_execution_path or MSCT.RULE_DEFAULT
     self._workers_location = workers_location
     self._workers_suffix = workers_suffix
@@ -164,17 +166,7 @@ class FlaskGateway(
     _logo = "FlaskGateway v{} started on '{}:{}'".format(
       self.__version__, self._host, self._port
     )
-
-    lead = 5
-    _logo = " " * lead + _logo
-    s2 = (len(_logo) + lead) * "*"
-    self.log.P("")
-    self.log.P(s2)
-    self.log.P("")
-    self.log.P(_logo)
-    self.log.P("")
-    self.log.P(s2)
-    self.log.P("")
+    self.log.P(_logo, color='g', boxed=True)
     return
 
   def startup(self):
@@ -402,6 +394,7 @@ class FlaskGateway(
           'python',
           fn,
           '--config_endpoint', json.dumps(config_data),
+          '--host_id', self.__host_id,
         ]     
         port = None
         is_support_process = True
@@ -438,6 +431,7 @@ class FlaskGateway(
         '--worker_suffix', self._workers_suffix,
         '--microservice_name', server_name,
         '--nr_workers', str(nr_workers),
+        '--host_id', self.__host_id,
         '--use_tf',
       ]
     #endif suport process or normal server
