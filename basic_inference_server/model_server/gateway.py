@@ -51,14 +51,32 @@ DEFAULT_SERVER_PATHS = [
   MSCT.RULE_UPDATE_WORKERS
 ]
 
+MONITORED_PACKAGES = [
+  'numpy',
+  'flask',
+  'transformers',
+  'torch',
+  'tensorflow',
+  'accelerate',
+  'tokenizers',
+  'Werkzeug',
+  'python-telegram-bot',  
+]
 
-def get_packages():
+
+def get_packages(monitored_packages=None):
   import pkg_resources
   packs = [x for x in pkg_resources.working_set]
   maxlen = max([len(x.key) for x in packs]) + 1
-  packs = [
-    "{}{}".format(x.key + ' ' * (maxlen - len(x.key)), x.version) for x in packs
-  ]
+  if isinstance(monitored_packages, list) and len(monitored_packages) > 0:
+    packs = [
+      "{}{}".format(x.key + ' ' * (maxlen - len(x.key)), x.version) for x in packs    
+      if x.key in monitored_packages
+    ]
+  else:
+    packs = [
+      "{}{}".format(x.key + ' ' * (maxlen - len(x.key)), x.version) for x in packs    
+    ]
   packs = sorted(packs)  
   return packs  
 
@@ -334,7 +352,7 @@ class FlaskGateway(
       disk_total=disk_total,    
       system=platform.platform(),
       py=sys.version,
-      packs=get_packages(),
+      monitored_packages=get_packages(monitored_packages=MONITORED_PACKAGES),
       info='Memory Size is in GB. Total and avail mem may be reported inconsistently in containers.'
     )
     return dct_stats, dct_system_alert
