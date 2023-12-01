@@ -65,12 +65,13 @@ def main():
   show_packs = os.environ.get('AID_APP_SHOW_PACKS')
   tz = os.environ.get('TZ', None)
   path = os.getcwd()
+  hostname = os.environ.get('HOSTNAME', "uknown")
   log.P("Running in DEBUG mode" if in_debug else "Running in normal mode (NO debug enabled)")
   packs = get_packages()
-  log.P("Running {} v{} on `{}` '{}', TZ: {}, py: {}, OS: {}, Docker: {}".format(
+  log.P("Running {} v{} on:\n  HostID: `{}` (hostname: {})\n  Path:   '{}'\n  TZ:     {}\n  Py:     {}\n  OS:     {}\n  Docker: {}".format(
     app_id,
     APP_VER,
-    host_id,
+    host_id, hostname,
     path, 
     tz,
     sys.version.split(' ')[0], 
