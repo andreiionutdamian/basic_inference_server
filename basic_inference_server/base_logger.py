@@ -117,6 +117,9 @@ class BaseLogger(object):
     _ = self.get_machine_name()
     
     self.analyze_processor_platform()
+    
+    debug_var = os.environ.get('AID_APP_DEBUG')
+        
 
     self._configure_data_and_dirs(config_file, config_file_encoding)
     self._generate_log_path()
@@ -137,11 +140,18 @@ class BaseLogger(object):
     self.verbose_log("  Logger v{}.".format(self.__version__),color='green')
     self.verbose_log("  Python v{}.".format(sys.version),color='green')
 
-
     if self.DEBUG:
-      self.P('  DEBUG is enabled in Logger', color='g')
+      self.P('  Logger DEBUG is enabled at Logger level ', color='g')
     else:
       self.P('  WARNING: Debug is NOT enabled in Logger, some functionalities are DISABLED', color='r')
+      
+    if isinstance(debug_var, str):
+      if debug_var.lower() in ['1', 'true', 'yes']:
+        self.app_debug_mode = True
+        self.P('  App debug mode is enabled', color='r')
+      else:
+        self.app_debug_mode = False      
+        self.P('  App debug mode is disabled', color='g')
 
     return
   
