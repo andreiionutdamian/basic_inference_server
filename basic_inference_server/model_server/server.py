@@ -168,6 +168,11 @@ class FlaskModelServer(BaseObject, _PluginsManagerMixin, _ServerFunctionsMixin):
     )
 
     return
+  
+  
+  @property
+  def name(self):
+    return self.__worker_name
 
   def _log_banner(self):
     _logo = "FlaskModelServer v{} '{}' <{} code={}> started on '{}:{}'".format(

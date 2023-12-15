@@ -74,6 +74,10 @@ class FlaskWorker(BaseObject, _ConfigHandlerMixin):
     prefix_log = kwargs.pop('prefix_log', '[FSKWKR]')
     super(FlaskWorker, self).__init__(log=log, maxlen_notifications=1000, prefix_log=prefix_log, **kwargs)
     return
+  
+  @property
+  def worker_id(self):
+    return self.log.host_id + ":" + str(self._worker_id)
 
   def startup(self):
     super().startup()
@@ -243,7 +247,12 @@ class FlaskWorker(BaseObject, _ConfigHandlerMixin):
         
     pred = self.__predict(prep_inputs)
 
-    answer = self.__post_process(pred)
+    temp_answer = self.__post_process(pred)
+    
+    answer = {
+      'predict_result' : temp_answer,
+      'worker_id' : self.worker_id,
+    }
 
     for k in base64_outputs:
       if k in answer:

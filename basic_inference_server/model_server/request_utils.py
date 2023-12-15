@@ -32,6 +32,8 @@ class MSCT:
   APP_VER = 'ver-app'
   FRM_VER = 'ver-lib'
   GW_UPTIME = 'gw-uptime'
+  HOSTNAME = 'hostname'
+  WORKER_ID = 'worker_id'
   TIME = 'time'
   SERVER_CLASS = 'SERVER_CLASS'
   HOST = 'HOST'

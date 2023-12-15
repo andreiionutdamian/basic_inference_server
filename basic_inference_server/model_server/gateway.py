@@ -150,6 +150,7 @@ class FlaskGateway(
     self._current_server_port = self._first_server_port
 
     self._config_endpoints = None
+    self.hostname = os.environ.get('HOSTNAME', 'unknown')
     
     self._start_time = time()
     
@@ -168,14 +169,18 @@ class FlaskGateway(
       fn = dct_download[MSCT.DOWNLOAD_FILE_PATH]
       return flask.send_file(fn)
     else:
+      worker_id = 'unknown'
       if isinstance(data, dict):
         dct_result = data
+        worker_id = data.pop(MSCT.WORKER_ID, 'unknown')
       else:
         dct_result = {
           MSCT.DATA : data,        
-        }
+        }              
       dct_result[MSCT.APP_VER] = APP_VER
       dct_result[MSCT.FRM_VER] = LIB_VER
+      dct_result[MSCT.HOSTNAME] = self.hostname
+      dct_result[MSCT.WORKER_ID] = worker_id     
       dct_result[MSCT.TIME] = self.log.time_to_str()
       dct_result[MSCT.GW_UPTIME] = self._elapsed_to_str(time() - self._start_time)
       return flask.jsonify(dct_result)
@@ -434,7 +439,6 @@ class FlaskGateway(
       self.P(msg, color='g')
       self._create_notification('log', msg)
       str_cmd = os.path.relpath(run_server_module.__file__)
-      self.P("Running '{}'".format(str_cmd))
       popen_args = [
         'python',
         str_cmd,
@@ -452,6 +456,7 @@ class FlaskGateway(
         '--host_id', self.__host_id,
         '--use_tf',
       ]
+      self.P("Running {}".format(popen_args))
     #endif suport process or normal server
       
     process = subprocess.Popen(

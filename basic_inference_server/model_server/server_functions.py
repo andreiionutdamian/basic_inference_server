@@ -52,16 +52,18 @@ class _ServerFunctionsMixin(object):
         "client": client,
         "call_id": counter,
         "input": params,
-        'framework_ver' : LIB_VER,
         'time' : self.log.time_to_str(),
       })
     else:
       if isinstance(answer, dict):
         answer['call_id'] = counter
-        answer['framework_ver'] = LIB_VER
         answer['time'] = self.log.time_to_str()
         if worker is not None:
-          answer['signature'] = '{}:{}'.format(worker.__class__.__name__, wid)
+          answer['signature'] = '{}:{}:{}'.format(
+            self.name,
+            worker.__class__.__name__, 
+            wid
+          )
         jresponse = flask.jsonify(answer)
       else:
         assert isinstance(answer, str)
@@ -107,7 +109,6 @@ class _ServerFunctionsMixin(object):
     #endfor
 
     jresponse = flask.jsonify({
-      'framework_ver' : LIB_VER, 
       **{"GENERAL" : lst_general_notifs},
       **dct_notifs_per_call
     })
@@ -119,7 +120,7 @@ class _ServerFunctionsMixin(object):
 
     nr_workers = params.get(MSCT.NR_WORKERS, None)
     if nr_workers is None:
-      return flask.jsonify({'framework_ver' : LIB_VER, 'ERROR' : "Bad input. 'NR_WORKERS' not found"})
+      return flask.jsonify({'ERROR' : "Bad input. 'NR_WORKERS' not found"})
 
     self._update_nr_workers(nr_workers)
     return flask.jsonify({'MESSAGE': 'OK'})
