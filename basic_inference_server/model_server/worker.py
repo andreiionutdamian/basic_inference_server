@@ -13,7 +13,7 @@ Dissemination of this information or reproduction of this material is strictly f
 written permission from the author.
 
 """
-
+import os
 import abc
 import base64
 import json
@@ -64,6 +64,7 @@ class FlaskWorker(BaseObject, _ConfigHandlerMixin):
     self._upstream_config_params = upstream_config or {}
     self.config_worker = None
     self._worker_id = worker_id
+    self.hostname = os.environ.get('HOSTNAME', 'unknown') 
     self.__last_query = None
 
     self._verbosity_level = verbosity_level
