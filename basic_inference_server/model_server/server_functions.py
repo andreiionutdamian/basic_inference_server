@@ -59,7 +59,8 @@ class _ServerFunctionsMixin(object):
         answer['call_id'] = counter
         answer['time'] = self.log.time_to_str()
         if worker is not None:
-          answer['signature'] = '{}:{}:{}'.format(
+          answer['signature'] = '{}.{}.{}.{}'.format(
+            self.log.host_id,
             self.name,
             worker.__class__.__name__, 
             wid

@@ -49,7 +49,7 @@ def main():
   host = args.host
   port = args.port
 
-  host_id = uuid.uuid4().hex[:6]
+  host_id = 'h' + uuid.uuid4().hex[:4]
   ### Attention! config_file should contain the configuration for each endpoint; 'NR_WORKERS' and upstream configuration
   log = Logger(
     lib_name='APPv' + APP_VER,
