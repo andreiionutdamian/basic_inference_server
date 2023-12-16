@@ -145,13 +145,15 @@ class BaseLogger(object):
     else:
       self.P('  WARNING: Debug is NOT enabled in Logger, some functionalities are DISABLED', color='r')
       
+    self.app_debug_mode = False      
     if isinstance(debug_var, str):
       if debug_var.lower() in ['1', 'true', 'yes']:
         self.app_debug_mode = True
-        self.P('  App debug mode is enabled', color='r')
-      else:
-        self.app_debug_mode = False      
-        self.P('  App debug mode is disabled', color='g')
+        
+    if self.app_debug_mode:
+      self.P('  App debug mode is enabled', color='r')
+    else:
+      self.P('  App debug mode is disabled', color='g')
 
     return
   
