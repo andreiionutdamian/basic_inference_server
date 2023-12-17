@@ -20,7 +20,12 @@ class _GatewayUtilsMixin(object):
   def show_env(self):
     for k,v in os.environ.items():
       if k.startswith('AID_') or k.startswith('NEAIL_'):
-        self.P("{}: {}".format(k,v))
+        if 'TOKEN' in k.upper() or 'KEY' in k.upper():
+          _l = 5 if len(v) > 10 else 3
+          _v = v[:_l] + '*' * (len(v)-(_l * 2)) + v[-_l:]
+        else:
+          _v = v
+        self.P("{}: {}".format(k,_v))
     return
   
   def _elapsed_to_str(self, t):
