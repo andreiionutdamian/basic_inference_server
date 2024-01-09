@@ -142,6 +142,12 @@ class _GatewayFunctionMixin(object):
   
 
   def _view_support_status(self):
+    """
+    
+    This endpoint is used by the support module to update the status of the server.
+    It should not be called directly by the user/consumers.
+
+    """
     ok = True
     request = flask.request
     params = get_api_request_body(request, self.log)
@@ -149,9 +155,11 @@ class _GatewayFunctionMixin(object):
 
     if signature is None:
       return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
-    message = params.get('msg')
-    if message is not None:
+    data = params.get('data', {})
+    message = data.get('msg', 'N/A')
+    if len(data) > 0:
       self.P("<STATUS {}>: {}".format(signature, message), color='m')
+      self._process_support_data(signature, data)
     if ok:
       return self.get_response({'MESSAGE': 'OK.'})
     else:

@@ -69,7 +69,7 @@ class MSCT:
   RULE_START = '/start_server'
   RULE_KILL = '/kill_server'
   RULE_SYS = '/system_status'
-  RULE_SUPPORT = '/support_update_status'
+  RULE_SUPPORT = '/support_update_status' # endpoint used by the support process to update the status of the server
   
   RULE_NOTIF = '/notifications'
   RULE_RUN = '/run'
