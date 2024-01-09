@@ -40,6 +40,7 @@ from app_ver import __VER__ as APP_VER
 from .gateway_functions import _GatewayFunctionMixin
 from .gateway_utils_mixin import _GatewayUtilsMixin, StateCT
 from .gateway_support import _GatewaySupportMixin, MONITORED_PACKAGES
+from .gateway_support import _get_packages as get_packages
 
 DEFAULT_NR_WORKERS = 5
 DEFAULT_HOST = '127.0.0.1'

@@ -17,7 +17,7 @@ MONITORED_PACKAGES = [
 ]
 
 
-def get_packages(monitored_packages=None):
+def _get_packages(monitored_packages=None):
   import pkg_resources
   packs = [x for x in pkg_resources.working_set]
   maxlen = max([len(x.key) for x in packs]) + 1
@@ -93,7 +93,7 @@ class _GatewaySupportMixin(object):
       disk_total=disk_total,    
       system=platform.platform(),
       py=sys.version,
-      monitored_packages=get_packages(monitored_packages=MONITORED_PACKAGES),
+      monitored_packages=_get_packages(monitored_packages=MONITORED_PACKAGES),
       info='Memory Size is in GB. Total and avail mem may be reported inconsistently in containers.',
       system_support_services=self.__support_status,
     )
