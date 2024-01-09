@@ -156,9 +156,7 @@ class _GatewayFunctionMixin(object):
     if signature is None:
       return self.get_response({MSCT.ERROR : f"Bad input. {MSCT.SIGNATURE} not found"})
     data = params.get('data', {})
-    message = data.get('msg', 'N/A')
     if len(data) > 0:
-      self.P("<STATUS {}>: {}".format(signature, message), color='m')
       self._process_support_data(signature, data)
     if ok:
       return self.get_response({'MESSAGE': 'OK.'})
